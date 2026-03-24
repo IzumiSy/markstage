@@ -2,21 +2,36 @@
 
 A component previewer and documentation generator for React / TypeScript projects.
 
-Drop `*.preview.mdx` files next to your components and Markstage gives you a dev
-server with live previews, syntax-highlighted code blocks, and an LLM-friendly
-`llms.txt` endpoint — all powered by Vite.
+Drop `*.preview.mdx` files next to your components and Markstage gives you a dev server with live previews, syntax-highlighted code blocks, and an LLM-friendly `llms.txt` endpoint — all powered by Vite.
 
 ## Features
 
-- **Live component preview** — write `tsx preview` fenced blocks in MDX and see
-  rendered output alongside collapsible source code.
-- **LLMs.txt generation** — serve a machine-readable summary of every documented
-  component at `/llms.txt`.
-- **GitHub source links** — link each preview page back to its source file on
-  GitHub.
-- **Dark / light theme** — built-in toggle with system-preference detection.
-- **Zero config to start** — sensible defaults; customise with a
-  `previewer.config.ts` when needed.
+### 🔴 Live Component Preview
+
+Write `` ```tsx preview `` fenced blocks in MDX and see rendered output alongside collapsible, syntax-highlighted source code. Components are resolved directly from your project — no separate sandbox or iframe needed.
+
+### 🤖 LLMs.txt Generation
+
+Automatically serve a machine-readable summary of every documented component at `/llms.txt`. AI coding assistants can consume this endpoint to understand your component library without parsing HTML.
+
+
+### ⚡ Zero Config
+
+Sensible defaults out of the box. Just place a `*.preview.mdx` file and run `npx markstage dev`. Customise later with a `previewer.config.ts` when needed.
+
+## Motivation
+
+Full-featured tools like [Storybook](https://storybook.js.org/) and [Astro Starlight](https://starlight.astro.build/) are excellent — they cover a wide range of use cases from interactive component workshops to rich documentation sites. When your project reaches a scale that demands those capabilities, they are the right choice.
+
+But in many cases, especially in the early stages of a project, what you really need is much simpler: **drop an MDX file next to your component and instantly get a live preview with an AI-readable catalogue.**
+
+That is what Markstage does. With zero configuration, a single `*.preview.mdx` file gives you:
+
+- A live component preview with syntax-highlighted source code
+- A built-in `/llms.txt` endpoint so AI tools can understand your components
+- A fast Vite-powered dev server that starts in seconds
+
+Markstage intentionally keeps its API surface small. There is no story format to learn, no plugin ecosystem to navigate, and no separate build pipeline to maintain. This means that when your documentation needs outgrow Markstage, migrating to Storybook or Starlight is straightforward — your MDX content and component code stay the same, and there is no proprietary abstraction to unwind.
 
 ## Quick Start
 
@@ -68,10 +83,8 @@ Create a `*.preview.mdx` file next to any component:
 ---
 title: Button
 description: A versatile button component.
-status: stable
 sidebar:
   group: Inputs
-  order: 1
 ---
 
 ## Default
@@ -79,7 +92,6 @@ sidebar:
 ```tsx preview
 <Button variant="default">Click me</Button>
 ```
-
 ````
 
 ### Frontmatter
