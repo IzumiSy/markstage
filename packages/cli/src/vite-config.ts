@@ -69,14 +69,7 @@ export function createPreviewerViteConfig(options: {
       previewerConfigPlugin(options.title, options.repo),
       previewerHtmlTitlePlugin(options.title),
       ...(options.repo?.url
-        ? [
-            previewerLlmsTxtPlugin(
-              options.title,
-              options.root,
-              options.glob,
-              options.repo,
-            ),
-          ]
+        ? [previewerLlmsTxtPlugin(options.title, options.root, options.glob, options.repo)]
         : []),
     ],
   };
@@ -188,9 +181,7 @@ function previewerConfigPlugin(title: string, repo?: PreviewerRepo): Plugin {
         // Strip trailing slash from URL
         const normalizedUrl = repo.url.replace(/\/+$/, "");
         const ref = repo.ref ?? "main";
-        lines.push(
-          `export const repo = ${JSON.stringify({ url: normalizedUrl, ref })};`,
-        );
+        lines.push(`export const repo = ${JSON.stringify({ url: normalizedUrl, ref })};`);
       } else {
         lines.push("export const repo = null;");
       }
@@ -299,9 +290,7 @@ function previewerLlmsTxtPlugin(
     const lines: string[] = [];
     lines.push(`# ${title}`);
     lines.push("");
-    lines.push(
-      `> ${fmEntries.length} components across ${groupMap.size} groups`,
-    );
+    lines.push(`> ${fmEntries.length} components across ${groupMap.size} groups`);
     lines.push("");
 
     for (const [groupName, groupEntries] of groupMap) {

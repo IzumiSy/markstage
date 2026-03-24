@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ComponentType,
-} from "react";
+import { useEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import { MDXProvider } from "@mdx-js/react";
 import { entries } from "virtual:previewer-entries";
 import { title, repo } from "virtual:previewer-config";
@@ -103,9 +97,7 @@ function useGroupedEntries(previewEntries: PreviewEntry[]) {
 
     for (const group of groupMap.values()) {
       group.entries.sort(
-        (a, b) =>
-          (a.frontmatter.sidebar?.order ?? 999) -
-          (b.frontmatter.sidebar?.order ?? 999),
+        (a, b) => (a.frontmatter.sidebar?.order ?? 999) - (b.frontmatter.sidebar?.order ?? 999),
       );
     }
 
@@ -156,17 +148,12 @@ function Sidebar({
     >
       {/* General section */}
       <div>
-        <div style={{ padding: "12px 16px 4px", ...groupHeadingStyle }}>
-          General
-        </div>
+        <div style={{ padding: "12px 16px 4px", ...groupHeadingStyle }}>General</div>
         <button
           onClick={() => onSelect(OVERVIEW_KEY)}
           style={{
             ...sidebarItemStyle,
-            backgroundColor:
-              selected === OVERVIEW_KEY
-                ? "var(--sidebar-active)"
-                : "transparent",
+            backgroundColor: selected === OVERVIEW_KEY ? "var(--sidebar-active)" : "transparent",
             fontWeight: selected === OVERVIEW_KEY ? 600 : 400,
           }}
         >
@@ -203,28 +190,19 @@ function Sidebar({
 
       {groups.map((group) => (
         <div key={group.name}>
-          <div style={{ padding: "20px 16px 4px", ...groupHeadingStyle }}>
-            {group.name}
-          </div>
+          <div style={{ padding: "20px 16px 4px", ...groupHeadingStyle }}>{group.name}</div>
           {group.entries.map((entry) => (
             <button
               key={entry.name}
               onClick={() => onSelect(entry.name)}
               style={{
                 ...sidebarItemStyle,
-                backgroundColor:
-                  selected === entry.name
-                    ? "var(--sidebar-active)"
-                    : "transparent",
+                backgroundColor: selected === entry.name ? "var(--sidebar-active)" : "transparent",
                 fontWeight: selected === entry.name ? 600 : 400,
               }}
             >
-              <span style={{ flex: 1 }}>
-                {entry.frontmatter.title ?? entry.name}
-              </span>
-              {entry.frontmatter.status && (
-                <StatusBadge status={entry.frontmatter.status} />
-              )}
+              <span style={{ flex: 1 }}>{entry.frontmatter.title ?? entry.name}</span>
+              {entry.frontmatter.status && <StatusBadge status={entry.frontmatter.status} />}
             </button>
           ))}
         </div>
@@ -250,9 +228,7 @@ function PreviewHeader({ entry }: { entry: PreviewEntry }) {
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         {frontmatter.title && (
-          <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0 }}>
-            {frontmatter.title}
-          </h1>
+          <h1 style={{ fontSize: 28, fontWeight: 700, margin: 0 }}>{frontmatter.title}</h1>
         )}
         {frontmatter.status && <StatusBadge status={frontmatter.status} />}
       </div>
@@ -363,10 +339,7 @@ function TableOfContents({
   containerRef: React.RefObject<HTMLDivElement | null>;
   contentKey: string;
 }) {
-  const { items, activeId, setActiveId } = useTableOfContents(
-    containerRef,
-    contentKey,
-  );
+  const { items, activeId, setActiveId } = useTableOfContents(containerRef, contentKey);
 
   if (items.length === 0) return null;
 
@@ -376,9 +349,7 @@ function TableOfContents({
         padding: "32px 16px",
       }}
     >
-      <div style={{ ...groupHeadingStyle, marginBottom: 12 }}>
-        Table of contents
-      </div>
+      <div style={{ ...groupHeadingStyle, marginBottom: 12 }}>Table of contents</div>
       {items.map((item) => (
         <a
           key={item.id}
@@ -398,10 +369,7 @@ function TableOfContents({
             color: activeId === item.id ? "var(--fg)" : "var(--fg-secondary)",
             fontWeight: activeId === item.id ? 600 : 400,
             textDecoration: "none",
-            borderLeft:
-              activeId === item.id
-                ? "2px solid var(--fg)"
-                : "2px solid transparent",
+            borderLeft: activeId === item.id ? "2px solid var(--fg)" : "2px solid transparent",
             paddingInlineStart: item.level === 3 ? 20 : 8,
           }}
         >
@@ -526,11 +494,7 @@ export function App() {
               margin: "0 auto",
             }}
           >
-            <Sidebar
-              groups={groups}
-              selected={selected}
-              onSelect={setSelected}
-            />
+            <Sidebar groups={groups} selected={selected} onSelect={setSelected} />
             {selected === OVERVIEW_KEY ? (
               <Overview onSelect={setSelected} />
             ) : current ? (
