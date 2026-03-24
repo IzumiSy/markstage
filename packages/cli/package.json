@@ -1,0 +1,54 @@
+{
+  "name": "@izumisy/markstage",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "markstage": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist/**",
+    "app/**"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "type-check": "tsc --incremental",
+    "lint": "oxlint",
+    "fmt": "oxfmt --write src app/src",
+    "fmt:check": "oxfmt --check src app/src"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mdx-js/react": "^3.1.0",
+    "@mdx-js/rollup": "^3.1.0",
+    "@vitejs/plugin-react": "^4.5.2",
+    "c12": "^3.3.3",
+    "citty": "^0.2.1",
+    "fast-glob": "^3.3.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-mdx-frontmatter": "^5.2.0",
+    "shiki": "^4.0.2",
+    "vite": "^6.3.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
+    "tsdown": "^0.21.3",
+    "typescript": "~5.9.3"
+  }
+}
