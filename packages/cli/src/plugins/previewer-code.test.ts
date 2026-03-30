@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { previewCodePlugin } from "./vite-plugin-preview-code";
+import { previewCodePlugin } from "./previewer-code";
 
 function callTransform(code: string, id: string) {
   const plugin = previewCodePlugin();

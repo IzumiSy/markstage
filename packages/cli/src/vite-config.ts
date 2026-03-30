@@ -8,7 +8,7 @@ import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import remarkGfm from "remark-gfm";
 import type { InlineConfig, Plugin, PluginOption } from "vite";
 import type { PreviewerRepo } from "./config";
-import { previewCodePlugin } from "./vite-plugin-preview-code";
+import { previewCodePlugin } from "./plugins/previewer-code";
 import { previewerEntriesPlugin } from "./plugins/previewer-entries";
 import { previewerCssPlugin } from "./plugins/previewer-css";
 import { previewerConfigPlugin } from "./plugins/previewer-config";
