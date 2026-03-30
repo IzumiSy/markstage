@@ -2,11 +2,7 @@ import type { Plugin, ViteDevServer, ResolvedConfig } from "vite";
 import { blockRegistry } from "./previewer-code";
 import { simpleHash } from "@izumisy/react-preview";
 import { extractPreviewBlocks } from "../preview-transform";
-import {
-  createIframeHooks,
-  generateIframeHtml,
-  VIRTUAL_PREFIX,
-} from "@izumisy/react-preview";
+import { createIframeHooks, generateIframeHtml, VIRTUAL_PREFIX } from "@izumisy/react-preview";
 
 /**
  * Vite plugin that renders each preview block in an isolated iframe.
@@ -15,9 +11,7 @@ import {
  * - Build: scans preview files, emits per-block JS chunks + HTML files
  *   so the result works on static hosting (e.g. GitHub Pages).
  */
-export function previewerIframePlugin(
-  resolveFiles: () => Promise<string[]>,
-): Plugin {
+export function previewerIframePlugin(resolveFiles: () => Promise<string[]>): Plugin {
   let resolvedConfig: ResolvedConfig;
   const chunkRefIds = new Map<string, string>();
   let devServer: ViteDevServer | null = null;

@@ -8,10 +8,7 @@ let highlighterPromise: Promise<HighlighterCore> | undefined;
 function getHighlighter(): Promise<HighlighterCore> {
   if (!highlighterPromise) {
     highlighterPromise = createHighlighterCore({
-      themes: [
-        import("@shikijs/themes/github-dark"),
-        import("@shikijs/themes/github-light"),
-      ],
+      themes: [import("@shikijs/themes/github-dark"), import("@shikijs/themes/github-light")],
       langs: [
         import("@shikijs/langs/tsx"),
         import("@shikijs/langs/jsx"),

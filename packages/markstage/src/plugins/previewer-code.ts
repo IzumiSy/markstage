@@ -1,9 +1,5 @@
 import type { Plugin } from "vite";
-import {
-  extractPreviewBlocks,
-  escapeJsString,
-  hasPreviewBlocks,
-} from "../preview-transform";
+import { extractPreviewBlocks, escapeJsString, hasPreviewBlocks } from "../preview-transform";
 import { simpleHash, type PreviewBlockEntry } from "@izumisy/react-preview";
 
 export const blockRegistry = new Map<string, PreviewBlockEntry>();
@@ -52,14 +48,10 @@ export function previewCodePlugin(): Plugin {
           height: block.meta.height,
         });
 
-        const heightProp = block.meta.height
-          ? ` height={"${block.meta.height}"}`
-          : "";
+        const heightProp = block.meta.height ? ` height={"${block.meta.height}"}` : "";
         const replacement = `<PreviewBlock code={"${escaped}"} blockId={"${blockId}"}${heightProp} />`;
         transformed =
-          transformed.slice(0, block.start) +
-          replacement +
-          transformed.slice(block.end);
+          transformed.slice(0, block.start) + replacement + transformed.slice(block.end);
       }
 
       return { code: transformed, map: null };
