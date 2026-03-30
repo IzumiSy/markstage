@@ -1,5 +1,5 @@
 {
-  "name": "@markstage/vitepress-plugin",
+  "name": "@izumisy/vitepress-plugin-react-preview",
   "version": "1.0.0",
   "description": "VitePress plugin for rendering React component previews via iframe",
   "type": "module",
@@ -21,7 +21,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@markstage/core": "workspace:*"
+    "@izumisy/react-preview": "workspace:*"
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",

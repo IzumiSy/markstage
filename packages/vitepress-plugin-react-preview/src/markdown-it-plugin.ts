@@ -1,5 +1,9 @@
 import type MarkdownIt from "markdown-it";
-import { simpleHash, parseMeta, type PreviewBlockEntry } from "@markstage/core";
+import {
+  simpleHash,
+  parseMeta,
+  type PreviewBlockEntry,
+} from "@izumisy/react-preview";
 
 /**
  * Create a markdown-it plugin that transforms ` ```tsx preview ` fenced code blocks

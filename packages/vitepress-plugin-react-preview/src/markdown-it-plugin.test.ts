@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import MarkdownIt from "markdown-it";
-import type { PreviewBlockEntry } from "@markstage/core";
+import type { PreviewBlockEntry } from "@izumisy/react-preview";
 import { createMarkdownItPlugin } from "./markdown-it-plugin";
 
 function render(src: string, env: Record<string, unknown> = {}) {

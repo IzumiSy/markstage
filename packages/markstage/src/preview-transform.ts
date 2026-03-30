@@ -1,3 +1,5 @@
+import { parseMeta } from "@izumisy/react-preview";
+
 const PREVIEW_FENCE_RE = /```tsx preview(.*?)\n([\s\S]*?)```/g;
 
 export type PreviewBlock = {
@@ -10,19 +12,6 @@ export type PreviewBlock = {
   /** Meta attributes parsed from the code fence info string */
   meta: Record<string, string>;
 };
-
-/**
- * Parse key="value" pairs from a meta string.
- */
-export function parseMeta(meta: string): Record<string, string> {
-  const result: Record<string, string> = {};
-  const re = /(\w+)="([^"]*)"/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(meta)) !== null) {
-    result[m[1]] = m[2];
-  }
-  return result;
-}
 
 /**
  * Extract all ` ```tsx preview ` fenced code blocks from a markdown/mdx string.

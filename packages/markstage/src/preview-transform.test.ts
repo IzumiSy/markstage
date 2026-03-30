@@ -1,10 +1,6 @@
 import { describe, it, expect } from "vitest";
-import {
-  extractPreviewBlocks,
-  escapeJsString,
-  hasPreviewBlocks,
-  parseMeta,
-} from "./preview-transform";
+import { extractPreviewBlocks, escapeJsString, hasPreviewBlocks } from "./preview-transform";
+import { parseMeta } from "@izumisy/react-preview";
 
 describe("extractPreviewBlocks", () => {
   it("extracts a single preview block", () => {

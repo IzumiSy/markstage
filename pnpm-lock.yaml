@@ -16,7 +16,7 @@ importers:
     dependencies:
       '@izumisy/markstage':
         specifier: workspace:*
-        version: link:../../packages/cli
+        version: link:../../packages/markstage
       '@tailor-platform/app-shell':
         specifier: ^0.31.1
         version: 0.31.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
@@ -29,9 +29,9 @@ importers:
 
   examples/vitepress:
     dependencies:
-      '@markstage/vitepress-plugin':
+      '@izumisy/vitepress-plugin-react-preview':
         specifier: workspace:*
-        version: link:../../packages/vitepress-plugin
+        version: link:../../packages/vitepress-plugin-react-preview
       '@tailor-platform/app-shell':
         specifier: ^0.31.1
         version: 0.31.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
@@ -49,42 +49,11 @@ importers:
         specifier: ^3.5.13
         version: 3.5.31(typescript@5.9.3)
 
-  packages/cli:
+  packages/markstage:
     dependencies:
-      '@markstage/core':
+      '@izumisy/react-preview':
         specifier: workspace:*
-        version: link:../core
-      c12:
-        specifier: ^3.3.3
-        version: 3.3.3
-      citty:
-        specifier: ^0.2.1
-        version: 0.2.1
-      fast-glob:
-        specifier: ^3.3.3
-        version: 3.3.3
-    devDependencies:
-      '@types/node':
-        specifier: ^22
-        version: 22.19.15
-      oxfmt:
-        specifier: ^0.41.0
-        version: 0.41.0
-      oxlint:
-        specifier: ^1.56.0
-        version: 1.56.0
-      tsdown:
-        specifier: ^0.21.3
-        version: 0.21.4(typescript@5.9.3)
-      typescript:
-        specifier: ~5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^4.1.2
-        version: 4.1.2(@types/node@22.19.15)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
-
-  packages/core:
-    dependencies:
+        version: link:../react-preview
       '@mdx-js/react':
         specifier: ^3.1.0
         version: 3.1.1(@types/react@19.2.14)(react@19.2.4)
@@ -94,6 +63,15 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.5.2
         version: 4.7.0(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
+      c12:
+        specifier: ^3.3.3
+        version: 3.3.3
+      citty:
+        specifier: ^0.2.1
+        version: 0.2.1
+      fast-glob:
+        specifier: ^3.3.3
+        version: 3.3.3
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -141,11 +119,30 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2(@types/node@22.19.15)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
 
-  packages/vitepress-plugin:
+  packages/react-preview:
     dependencies:
-      '@markstage/core':
+      vite:
+        specifier: ^6.3.5
+        version: 6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3)
+    devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.19.15
+      tsdown:
+        specifier: ^0.21.3
+        version: 0.21.4(typescript@5.9.3)
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.1.2
+        version: 4.1.2(@types/node@22.19.15)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
+
+  packages/vitepress-plugin-react-preview:
+    dependencies:
+      '@izumisy/react-preview':
         specifier: workspace:*
-        version: link:../core
+        version: link:../react-preview
       vue:
         specifier: '>=3'
         version: 3.5.31(typescript@5.9.3)

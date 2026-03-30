@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { previewCodePlugin } from "./previewer-code";
-import { blockRegistry, simpleHash } from "./preview-registry";
+import { previewCodePlugin, blockRegistry } from "./previewer-code";
+import { simpleHash } from "@izumisy/react-preview";
 
 function callTransform(code: string, id: string) {
   const plugin = previewCodePlugin();

@@ -2,17 +2,6 @@ import { resolve } from "node:path";
 import { createServer, build, preview } from "vite";
 import { createPreviewerViteConfig } from "./vite-config";
 
-export { defineConfig, type PreviewerConfig, type PreviewerRepo } from "./config";
-export { createPreviewerViteConfig } from "./vite-config";
-export {
-  extractPreviewBlocks,
-  escapeJsString,
-  hasPreviewBlocks,
-  parseMeta,
-  type PreviewBlock,
-} from "./preview-transform";
-export { simpleHash, type PreviewBlockEntry } from "./plugins/preview-registry";
-
 export interface PreviewerRunOptions {
   cwd: string;
   config: import("./config").PreviewerConfig;

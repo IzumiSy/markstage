@@ -1,6 +1,6 @@
 import type { Plugin } from "vite";
-import type { PreviewBlockEntry } from "@markstage/core";
-import { createBaseIframePlugin } from "@markstage/core/iframe";
+import type { PreviewBlockEntry } from "@izumisy/react-preview";
+import { createBaseIframePlugin } from "@izumisy/react-preview";
 import { createMarkdownItPlugin } from "./markdown-it-plugin";
 
 export type MarkstageVitePressOptions = {

@@ -1,5 +1,5 @@
 import DefaultTheme from "vitepress/theme";
-import PreviewBlock from "@markstage/vitepress-plugin/PreviewBlock.vue";
+import PreviewBlock from "@izumisy/vitepress-plugin-react-preview/PreviewBlock.vue";
 import type { Theme } from "vitepress";
 
 export default {

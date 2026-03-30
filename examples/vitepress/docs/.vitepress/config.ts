@@ -1,5 +1,5 @@
 import { defineConfig } from "vitepress";
-import { createMarkstagePlugin } from "@markstage/vitepress-plugin";
+import { createMarkstagePlugin } from "@izumisy/vitepress-plugin-react-preview";
 
 const markstage = createMarkstagePlugin({
   css: "@tailor-platform/app-shell/styles",

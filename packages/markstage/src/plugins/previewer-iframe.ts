@@ -1,7 +1,8 @@
 import type { Plugin, ViteDevServer, ResolvedConfig } from "vite";
-import { blockRegistry, simpleHash } from "./preview-registry";
+import { blockRegistry } from "./previewer-code";
+import { simpleHash } from "@izumisy/react-preview";
 import { extractPreviewBlocks } from "../preview-transform";
-import { createIframeHooks, generateIframeHtml, VIRTUAL_PREFIX } from "./iframe-common";
+import { createIframeHooks, generateIframeHtml, VIRTUAL_PREFIX } from "@izumisy/react-preview";
 
 /**
  * Vite plugin that renders each preview block in an isolated iframe.

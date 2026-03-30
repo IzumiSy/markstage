@@ -8,7 +8,7 @@
     "preview": "vitepress preview docs"
   },
   "dependencies": {
-    "@markstage/vitepress-plugin": "workspace:*",
+    "@izumisy/vitepress-plugin-react-preview": "workspace:*",
     "@tailor-platform/app-shell": "^0.31.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"

@@ -2,8 +2,8 @@
 import { defineCommand, runMain } from "citty";
 import { loadConfig } from "c12";
 import fg from "fast-glob";
-import type { PreviewerConfig } from "@markstage/core";
-import { startDev, runBuild, runPreview } from "@markstage/core";
+import type { PreviewerConfig } from "./config";
+import { startDev, runBuild, runPreview } from "./server";
 
 async function loadPreviewerConfig(cwd: string): Promise<PreviewerConfig> {
   const { config } = await loadConfig<PreviewerConfig>({

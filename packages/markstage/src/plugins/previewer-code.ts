@@ -1,6 +1,8 @@
 import type { Plugin } from "vite";
 import { extractPreviewBlocks, escapeJsString, hasPreviewBlocks } from "../preview-transform";
-import { blockRegistry, simpleHash } from "./preview-registry";
+import { simpleHash, type PreviewBlockEntry } from "@izumisy/react-preview";
+
+export const blockRegistry = new Map<string, PreviewBlockEntry>();
 
 /**
  * Vite plugin that transforms ` ```tsx preview ` fenced code blocks in .preview.mdx
