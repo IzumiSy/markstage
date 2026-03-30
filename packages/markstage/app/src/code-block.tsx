@@ -1,6 +1,32 @@
 import { useCallback, useEffect, useState } from "react";
-import { codeToHtml } from "shiki";
+import { createHighlighterCore, type HighlighterCore } from "shiki/core";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 import { useTheme } from "./theme";
+
+let highlighterPromise: Promise<HighlighterCore> | undefined;
+
+function getHighlighter(): Promise<HighlighterCore> {
+  if (!highlighterPromise) {
+    highlighterPromise = createHighlighterCore({
+      themes: [
+        import("@shikijs/themes/github-dark"),
+        import("@shikijs/themes/github-light"),
+      ],
+      langs: [
+        import("@shikijs/langs/tsx"),
+        import("@shikijs/langs/jsx"),
+        import("@shikijs/langs/typescript"),
+        import("@shikijs/langs/javascript"),
+        import("@shikijs/langs/css"),
+        import("@shikijs/langs/html"),
+        import("@shikijs/langs/json"),
+        import("@shikijs/langs/shellscript"),
+      ],
+      engine: createJavaScriptRegexEngine(),
+    });
+  }
+  return highlighterPromise;
+}
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -90,19 +116,27 @@ export function CodeBlock({
   useEffect(() => {
     if (!lang) return;
     let cancelled = false;
-    codeToHtml(children, {
-      lang,
-      theme: colorScheme === "dark" ? "github-dark" : "github-light",
-      transformers: [
-        {
-          pre(node) {
-            node.properties.style = "margin:0;padding:10px";
-          },
-        },
-      ],
-    }).then((result) => {
-      if (!cancelled) setHtml(result);
-    });
+    getHighlighter()
+      .then(async (highlighter) => {
+        if (!highlighter.getLoadedLanguages().includes(lang)) {
+          // Language not pre-loaded – fall back to plain text
+          return null;
+        }
+        return highlighter.codeToHtml(children, {
+          lang,
+          theme: colorScheme === "dark" ? "github-dark" : "github-light",
+          transformers: [
+            {
+              pre(node) {
+                node.properties.style = "margin:0;padding:10px";
+              },
+            },
+          ],
+        });
+      })
+      .then((result) => {
+        if (!cancelled && result) setHtml(result);
+      });
     return () => {
       cancelled = true;
     };
