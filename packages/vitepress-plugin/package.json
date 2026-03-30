@@ -1,0 +1,39 @@
+{
+  "name": "@markstage/vitepress-plugin",
+  "version": "1.0.0",
+  "description": "VitePress plugin for rendering React component previews via iframe",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./PreviewBlock.vue": "./src/PreviewBlock.vue"
+  },
+  "files": [
+    "dist/**",
+    "src/PreviewBlock.vue"
+  ],
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "type-check": "tsc --incremental",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@markstage/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^22",
+    "markdown-it": "^14.1.0",
+    "tsdown": "^0.21.3",
+    "typescript": "~5.9.3",
+    "vite": "^6.3.5",
+    "vitest": "^4.1.2"
+  },
+  "peerDependencies": {
+    "markdown-it": ">=14",
+    "vite": ">=6"
+  }
+}

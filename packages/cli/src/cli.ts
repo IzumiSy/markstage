@@ -1,26 +1,35 @@
 #!/usr/bin/env node
-import { resolve } from "node:path";
-import { createServer, build } from "vite";
 import { defineCommand, runMain } from "citty";
-import { createPreviewerViteConfig } from "./vite-config";
-import { loadPreviewerConfig } from "./load-config";
+import { loadConfig } from "c12";
+import fg from "fast-glob";
+import type { PreviewerConfig } from "@markstage/core";
+import { startDev, runBuild, runPreview } from "@markstage/core";
+
+async function loadPreviewerConfig(cwd: string): Promise<PreviewerConfig> {
+  const { config } = await loadConfig<PreviewerConfig>({
+    name: "previewer",
+    cwd,
+  });
+  return config ?? {};
+}
+
+function createFileResolver(
+  cwd: string,
+  glob: string,
+): () => Promise<string[]> {
+  return () => fg(glob, { cwd, absolute: true });
+}
 
 const dev = defineCommand({
   meta: { name: "dev", description: "Start the previewer dev server" },
   async run() {
     const cwd = process.cwd();
     const config = await loadPreviewerConfig(cwd);
-    const viteConfig = createPreviewerViteConfig({
-      root: cwd,
-      title: config.title,
-      glob: config.glob ?? "src/**/*.preview.mdx",
-      css: config.css,
-      repo: config.repo,
-      vite: config.vite,
-    });
-    const server = await createServer(viteConfig);
-    await server.listen();
-    server.printUrls();
+    const resolveFiles = createFileResolver(
+      cwd,
+      config.glob ?? "src/**/*.preview.mdx",
+    );
+    await startDev({ cwd, config, resolveFiles });
   },
 });
 
@@ -29,27 +38,33 @@ const buildCmd = defineCommand({
   async run() {
     const cwd = process.cwd();
     const config = await loadPreviewerConfig(cwd);
-    const viteConfig = createPreviewerViteConfig({
-      root: cwd,
-      title: config.title,
-      glob: config.glob ?? "src/**/*.preview.mdx",
-      css: config.css,
-      repo: config.repo,
-      vite: config.vite,
-    });
-    await build({
-      ...viteConfig,
-      build: {
-        ...viteConfig.build,
-        outDir: resolve(cwd, "dist-preview"),
-      },
-    });
+    const resolveFiles = createFileResolver(
+      cwd,
+      config.glob ?? "src/**/*.preview.mdx",
+    );
+    await runBuild({ cwd, config, resolveFiles });
+  },
+});
+
+const previewCmd = defineCommand({
+  meta: {
+    name: "preview",
+    description: "Preview the production build locally",
+  },
+  async run() {
+    const cwd = process.cwd();
+    const config = await loadPreviewerConfig(cwd);
+    const resolveFiles = createFileResolver(
+      cwd,
+      config.glob ?? "src/**/*.preview.mdx",
+    );
+    await runPreview({ cwd, config, resolveFiles });
   },
 });
 
 const main = defineCommand({
   meta: { name: "previewer", description: "Component previewer" },
-  subCommands: { dev, build: buildCmd },
+  subCommands: { dev, build: buildCmd, preview: previewCmd },
 });
 
 runMain(main);

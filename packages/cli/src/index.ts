@@ -1,1 +1,6 @@
-export { defineConfig, type PreviewerConfig, type PreviewerRepo } from "./config";
+export {
+  defineConfig,
+  type PreviewerConfig,
+  type PreviewerRepo,
+  type PreviewerRunOptions,
+} from "@markstage/core";
