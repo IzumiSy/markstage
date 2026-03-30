@@ -13,7 +13,6 @@ markstage/
 │   │   │   ├── config.ts     # PreviewerConfig type + defineConfig helper
 │   │   │   ├── load-config.ts               # Loads previewer.config.* via c12
 │   │   │   ├── vite-config.ts               # Assembles the full Vite InlineConfig
-│   │   │   ├── extract-props.ts             # TypeScript prop extraction via ts-morph
 │   │   │   └── plugins/                     # Vite plugins
 │   │   │       ├── previewer-code.ts        # Transforms ```tsx preview blocks
 │   │   │       ├── previewer-entries.ts     # Virtual module: preview MDX entries

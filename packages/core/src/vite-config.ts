@@ -11,7 +11,6 @@ import { previewCodePlugin } from "./plugins/previewer-code";
 import { previewerIframePlugin } from "./plugins/previewer-iframe";
 import { previewerEntriesPlugin } from "./plugins/previewer-entries";
 import { previewerCssPlugin } from "./plugins/previewer-css";
-import { previewerConfigPlugin } from "./plugins/previewer-config";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const APP_DIR = resolve(__dirname, "..", "app");
@@ -40,6 +39,17 @@ export function createPreviewerViteConfig(options: {
     // app/index.html is served directly — no HTML injection middleware needed.
     root: APP_DIR,
     publicDir: false,
+    define: {
+      __PREVIEWER_TITLE__: JSON.stringify(options.title),
+      __PREVIEWER_REPO__: JSON.stringify(
+        options.repo
+          ? {
+              url: options.repo.url.replace(/\/+$/, ""),
+              ref: options.repo.ref ?? "main",
+            }
+          : null,
+      ),
+    },
     resolve: {
       alias: {
         "@mdx-js/react": mdxReactEntry,
@@ -69,7 +79,6 @@ export function createPreviewerViteConfig(options: {
       ...(options.vite?.plugins ?? []),
       previewerEntriesPlugin(options.root, options.resolveFiles),
       previewerCssPlugin(options.root, options.css),
-      previewerConfigPlugin(options.title, options.repo),
     ],
   };
 }

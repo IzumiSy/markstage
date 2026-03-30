@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState, type ComponentType } from "react";
 import { MDXProvider } from "@mdx-js/react";
 import { entries } from "virtual:previewer-entries";
-import { title, repo } from "virtual:previewer-config";
 import { mdxComponents } from "./mdx-components";
 import { Overview } from "./overview";
 import { ThemeProvider, ThemeToggle } from "./theme";
+
+const title: string = __PREVIEWER_TITLE__;
+const repo: { url: string; ref: string } | null = __PREVIEWER_REPO__;
 
 interface PreviewEntryFrontmatter {
   title?: string;

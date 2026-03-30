@@ -22,13 +22,7 @@ declare module "virtual:previewer-entries" {
   export const entries: PreviewEntry[];
 }
 
-declare module "virtual:previewer-config" {
-  interface PreviewerRepoResolved {
-    url: string;
-    ref: string;
-  }
-  export const title: string;
-  export const repo: PreviewerRepoResolved | null;
-}
-
 declare module "virtual:previewer-css" {}
+
+declare const __PREVIEWER_TITLE__: string;
+declare const __PREVIEWER_REPO__: { url: string; ref: string } | null;

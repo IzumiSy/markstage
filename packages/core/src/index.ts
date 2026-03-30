@@ -4,7 +4,6 @@ import { createPreviewerViteConfig } from "./vite-config";
 
 export { defineConfig, type PreviewerConfig, type PreviewerRepo } from "./config";
 export { createPreviewerViteConfig } from "./vite-config";
-export { extractProps, extractTypeDescription, type PropInfo } from "./extract-props";
 export {
   extractPreviewBlocks,
   escapeJsString,
