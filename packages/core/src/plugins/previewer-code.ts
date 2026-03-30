@@ -1,9 +1,5 @@
 import type { Plugin } from "vite";
-import {
-  extractPreviewBlocks,
-  escapeJsString,
-  hasPreviewBlocks,
-} from "../preview-transform";
+import { extractPreviewBlocks, escapeJsString, hasPreviewBlocks } from "../preview-transform";
 import { blockRegistry, simpleHash } from "./preview-registry";
 
 /**
@@ -51,9 +47,7 @@ export function previewCodePlugin(): Plugin {
 
         const replacement = `<PreviewBlock code={"${escaped}"} blockId={"${blockId}"} />`;
         transformed =
-          transformed.slice(0, block.start) +
-          replacement +
-          transformed.slice(block.end);
+          transformed.slice(0, block.start) + replacement + transformed.slice(block.end);
       }
 
       return { code: transformed, map: null };

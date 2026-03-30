@@ -13,10 +13,7 @@ async function loadPreviewerConfig(cwd: string): Promise<PreviewerConfig> {
   return config ?? {};
 }
 
-function createFileResolver(
-  cwd: string,
-  glob: string,
-): () => Promise<string[]> {
+function createFileResolver(cwd: string, glob: string): () => Promise<string[]> {
   return () => fg(glob, { cwd, absolute: true });
 }
 
@@ -25,10 +22,7 @@ const dev = defineCommand({
   async run() {
     const cwd = process.cwd();
     const config = await loadPreviewerConfig(cwd);
-    const resolveFiles = createFileResolver(
-      cwd,
-      config.glob ?? "src/**/*.preview.mdx",
-    );
+    const resolveFiles = createFileResolver(cwd, config.glob ?? "src/**/*.preview.mdx");
     await startDev({ cwd, config, resolveFiles });
   },
 });
@@ -38,10 +32,7 @@ const buildCmd = defineCommand({
   async run() {
     const cwd = process.cwd();
     const config = await loadPreviewerConfig(cwd);
-    const resolveFiles = createFileResolver(
-      cwd,
-      config.glob ?? "src/**/*.preview.mdx",
-    );
+    const resolveFiles = createFileResolver(cwd, config.glob ?? "src/**/*.preview.mdx");
     await runBuild({ cwd, config, resolveFiles });
   },
 });
@@ -54,10 +45,7 @@ const previewCmd = defineCommand({
   async run() {
     const cwd = process.cwd();
     const config = await loadPreviewerConfig(cwd);
-    const resolveFiles = createFileResolver(
-      cwd,
-      config.glob ?? "src/**/*.preview.mdx",
-    );
+    const resolveFiles = createFileResolver(cwd, config.glob ?? "src/**/*.preview.mdx");
     await runPreview({ cwd, config, resolveFiles });
   },
 });

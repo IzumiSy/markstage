@@ -24,15 +24,9 @@ describe("extractPreviewBlocks", () => {
   });
 
   it("extracts multiple preview blocks", () => {
-    const input = [
-      "```tsx preview",
-      "<A />",
-      "```",
-      "",
-      "```tsx preview",
-      "<B />",
-      "```",
-    ].join("\n");
+    const input = ["```tsx preview", "<A />", "```", "", "```tsx preview", "<B />", "```"].join(
+      "\n",
+    );
 
     const blocks = extractPreviewBlocks(input);
     expect(blocks).toHaveLength(2);
@@ -46,13 +40,7 @@ describe("extractPreviewBlocks", () => {
   });
 
   it("preserves multiline code", () => {
-    const input = [
-      "```tsx preview",
-      "<div>",
-      "  <span>hello</span>",
-      "</div>",
-      "```",
-    ].join("\n");
+    const input = ["```tsx preview", "<div>", "  <span>hello</span>", "</div>", "```"].join("\n");
 
     const blocks = extractPreviewBlocks(input);
     expect(blocks[0].code).toBe("<div>\n  <span>hello</span>\n</div>");
@@ -97,9 +85,7 @@ describe("hasPreviewBlocks", () => {
   });
 
   it("returns true when preview blocks have meta attributes", () => {
-    expect(hasPreviewBlocks('```tsx preview wrap="row"\n<A />\n```')).toBe(
-      true,
-    );
+    expect(hasPreviewBlocks('```tsx preview wrap="row"\n<A />\n```')).toBe(true);
   });
 
   it("returns false for normal code blocks", () => {

@@ -31,9 +31,7 @@ export function Overview({ onSelect }: OverviewProps) {
   // Sort entries within each group by order
   for (const group of groupMap.values()) {
     group.sort(
-      (a, b) =>
-        (a.frontmatter.sidebar?.order ?? 999) -
-        (b.frontmatter.sidebar?.order ?? 999),
+      (a, b) => (a.frontmatter.sidebar?.order ?? 999) - (b.frontmatter.sidebar?.order ?? 999),
     );
   }
 

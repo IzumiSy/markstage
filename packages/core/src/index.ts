@@ -2,17 +2,9 @@ import { resolve } from "node:path";
 import { createServer, build, preview } from "vite";
 import { createPreviewerViteConfig } from "./vite-config";
 
-export {
-  defineConfig,
-  type PreviewerConfig,
-  type PreviewerRepo,
-} from "./config";
+export { defineConfig, type PreviewerConfig, type PreviewerRepo } from "./config";
 export { createPreviewerViteConfig } from "./vite-config";
-export {
-  extractProps,
-  extractTypeDescription,
-  type PropInfo,
-} from "./extract-props";
+export { extractProps, extractTypeDescription, type PropInfo } from "./extract-props";
 export {
   extractPreviewBlocks,
   escapeJsString,
@@ -32,11 +24,7 @@ export interface PreviewerRunOptions {
 /**
  * Start the previewer dev server programmatically.
  */
-export async function startDev({
-  cwd,
-  config,
-  resolveFiles,
-}: PreviewerRunOptions) {
+export async function startDev({ cwd, config, resolveFiles }: PreviewerRunOptions) {
   const viteConfig = createPreviewerViteConfig({
     root: cwd,
     title: config.title,
@@ -54,11 +42,7 @@ export async function startDev({
 /**
  * Build the previewer for production programmatically.
  */
-export async function runBuild({
-  cwd,
-  config,
-  resolveFiles,
-}: PreviewerRunOptions) {
+export async function runBuild({ cwd, config, resolveFiles }: PreviewerRunOptions) {
   const viteConfig = createPreviewerViteConfig({
     root: cwd,
     title: config.title,
@@ -79,11 +63,7 @@ export async function runBuild({
 /**
  * Start a static preview server for the built output.
  */
-export async function runPreview({
-  cwd,
-  config,
-  resolveFiles,
-}: PreviewerRunOptions) {
+export async function runPreview({ cwd, config, resolveFiles }: PreviewerRunOptions) {
   const viteConfig = createPreviewerViteConfig({
     root: cwd,
     title: config.title,

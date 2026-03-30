@@ -22,14 +22,10 @@ export function generateIframeHtml(options: {
   cssLinks?: string[];
 }): string {
   const rootStyle =
-    options.wrap && WRAP_STYLES[options.wrap]
-      ? ` style="${WRAP_STYLES[options.wrap]}"`
-      : "";
+    options.wrap && WRAP_STYLES[options.wrap] ? ` style="${WRAP_STYLES[options.wrap]}"` : "";
 
   const cssLinkTags =
-    options.cssLinks
-      ?.map((f) => `  <link rel="stylesheet" href="${f}">`)
-      .join("\n") ?? "";
+    options.cssLinks?.map((f) => `  <link rel="stylesheet" href="${f}">`).join("\n") ?? "";
 
   return `<!DOCTYPE html>
 <html>
@@ -95,9 +91,7 @@ export function createIframeHooks(options: IframePluginOptions) {
 
   function resolveId(this: any, id: string, importer?: string) {
     if (importer?.startsWith("\0" + VIRTUAL_PREFIX)) {
-      const blockId = importer
-        .slice(("\0" + VIRTUAL_PREFIX).length)
-        .replace(/\.tsx$/, "");
+      const blockId = importer.slice(("\0" + VIRTUAL_PREFIX).length).replace(/\.tsx$/, "");
       const entry = blockRegistry.get(blockId);
       if (entry?.sourceFile) {
         return this.resolve(id, entry.sourceFile, { skipSelf: true });
@@ -117,9 +111,7 @@ export function createIframeHooks(options: IframePluginOptions) {
   function load(id: string) {
     if (!id.startsWith("\0" + VIRTUAL_PREFIX)) return;
 
-    const blockId = id
-      .slice(("\0" + VIRTUAL_PREFIX).length)
-      .replace(/\.tsx$/, "");
+    const blockId = id.slice(("\0" + VIRTUAL_PREFIX).length).replace(/\.tsx$/, "");
     const entry = blockRegistry.get(blockId);
     if (!entry) return;
 
@@ -138,9 +130,7 @@ export function createIframeHooks(options: IframePluginOptions) {
       if (!url?.startsWith(PREVIEW_ROUTE)) return next();
 
       const urlObj = new URL(url, "http://localhost");
-      const blockId = urlObj.pathname
-        .slice(PREVIEW_ROUTE.length)
-        .replace(/\.html$/, "");
+      const blockId = urlObj.pathname.slice(PREVIEW_ROUTE.length).replace(/\.html$/, "");
 
       const entry = blockRegistry.get(blockId);
 
@@ -167,10 +157,7 @@ export function createIframeHooks(options: IframePluginOptions) {
  * Create a complete iframe Vite plugin from the common hooks.
  * Suitable for consumers that don't need to extend the plugin (e.g. VitePress).
  */
-export function createBaseIframePlugin(
-  name: string,
-  options: IframePluginOptions,
-): Plugin {
+export function createBaseIframePlugin(name: string, options: IframePluginOptions): Plugin {
   const hooks = createIframeHooks(options);
   return {
     name,

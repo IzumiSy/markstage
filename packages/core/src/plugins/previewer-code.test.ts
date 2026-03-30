@@ -5,10 +5,7 @@ import { blockRegistry, simpleHash } from "./preview-registry";
 function callTransform(code: string, id: string) {
   const plugin = previewCodePlugin();
   // vitest doesn't run the full Vite pipeline, so call transform() directly
-  const transform = plugin.transform as (
-    code: string,
-    id: string,
-  ) => { code: string } | undefined;
+  const transform = plugin.transform as (code: string, id: string) => { code: string } | undefined;
   return transform.call({} as never, code, id);
 }
 
@@ -32,9 +29,7 @@ describe("previewCodePlugin", () => {
     const result = callTransform(input, id);
     const blockId = simpleHash(`${id}:0`);
     expect(result!.code).toContain(`blockId={"${blockId}"}`);
-    expect(result!.code).toContain(
-      `code={"<Button variant=\\"default\\">Click</Button>"}`,
-    );
+    expect(result!.code).toContain(`code={"<Button variant=\\"default\\">Click</Button>"}`);
     expect(result!.code).toContain("<PreviewBlock");
     expect(result!.code).toContain("/>");
     // Should NOT contain children
@@ -43,15 +38,9 @@ describe("previewCodePlugin", () => {
 
   it("transforms multiple ```tsx preview blocks", () => {
     const id = "src/Multi.preview.mdx";
-    const input = [
-      "```tsx preview",
-      "<A />",
-      "```",
-      "",
-      "```tsx preview",
-      "<B />",
-      "```",
-    ].join("\n");
+    const input = ["```tsx preview", "<A />", "```", "", "```tsx preview", "<B />", "```"].join(
+      "\n",
+    );
 
     const result = callTransform(input, id);
     const blockId0 = simpleHash(`${id}:0`);
@@ -77,32 +66,17 @@ describe("previewCodePlugin", () => {
   });
 
   it("escapes backslashes and double quotes in code", () => {
-    const input = [
-      "```tsx preview",
-      "const re = /\\d+/;",
-      'const s = "hello";',
-      "```",
-    ].join("\n");
+    const input = ["```tsx preview", "const re = /\\d+/;", 'const s = "hello";', "```"].join("\n");
 
     const result = callTransform(input, "src/Escape.preview.mdx");
-    expect(result!.code).toContain(
-      `code={"const re = /\\\\d+/;\\nconst s = \\"hello\\";"}`,
-    );
+    expect(result!.code).toContain(`code={"const re = /\\\\d+/;\\nconst s = \\"hello\\";"}`);
   });
 
   it("preserves multiline code as escaped newlines in code prop", () => {
-    const input = [
-      "```tsx preview",
-      "<div>",
-      "  <span>hello</span>",
-      "</div>",
-      "```",
-    ].join("\n");
+    const input = ["```tsx preview", "<div>", "  <span>hello</span>", "</div>", "```"].join("\n");
 
     const result = callTransform(input, "src/Multiline.preview.mdx");
-    expect(result!.code).toContain(
-      `code={"<div>\\n  <span>hello</span>\\n</div>"}`,
-    );
+    expect(result!.code).toContain(`code={"<div>\\n  <span>hello</span>\\n</div>"}`);
   });
 
   it("registers blocks in the shared registry", () => {
