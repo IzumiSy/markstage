@@ -38,13 +38,16 @@ export function createMarkdownItPlugin(
           code,
           sourceFile: "",
           wrap: meta.wrap,
+          height: meta.height,
         });
 
         // Use VitePress's configured Shiki highlighter if available
         const highlighted = md.options.highlight?.(code, "tsx", "") ?? "";
         const encodedHighlighted = Buffer.from(highlighted).toString("base64");
 
-        return `<PreviewBlock code="${encodedCode}" block-id="${blockId}" highlighted="${encodedHighlighted}" />\n`;
+        const heightAttr = meta.height ? ` height="${meta.height}"` : "";
+
+        return `<PreviewBlock code="${encodedCode}" block-id="${blockId}" highlighted="${encodedHighlighted}"${heightAttr} />\n`;
       }
 
       return defaultFence(tokens, idx, options, env, self);

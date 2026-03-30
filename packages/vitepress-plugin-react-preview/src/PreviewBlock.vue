@@ -5,9 +5,10 @@ const props = defineProps<{
   code: string;
   blockId: string;
   highlighted?: string;
+  height?: string;
 }>();
 
-const iframeHeight = ref(150);
+const iframeHeight = ref(props.height ? Number(props.height) : 150);
 const showCode = ref(true);
 const iframeRef = ref<HTMLIFrameElement | null>(null);
 

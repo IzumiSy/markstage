@@ -9,6 +9,18 @@ export default defineConfig({
   title: "Markstage + VitePress Example",
   description: "Example of using Markstage preview blocks in VitePress",
 
+  themeConfig: {
+    sidebar: [
+      {
+        text: "Components",
+        items: [
+          { text: "Button", link: "/examples/button" },
+          { text: "Combobox", link: "/examples/combobox" },
+        ],
+      },
+    ],
+  },
+
   markdown: {
     config(md) {
       md.use(markstage.markdownIt);

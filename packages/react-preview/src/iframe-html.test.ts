@@ -102,11 +102,23 @@ describe("generatePreviewModuleCode", () => {
     expect(code).toContain('import "virtual:previewer-css"');
   });
 
+  it("uses ?inline for non-virtual CSS imports", () => {
+    const code = generatePreviewModuleCode(
+      "abc123",
+      { code: "<div />", sourceFile: "/test.mdx" },
+      "@tailor-platform/app-shell/styles",
+    );
+    expect(code).toContain(
+      'import __markstage_css from "@tailor-platform/app-shell/styles?inline"',
+    );
+    expect(code).toContain('document.createElement("style")');
+  });
+
   it("does not include CSS import when not provided", () => {
     const code = generatePreviewModuleCode("abc123", {
       code: "<div />",
       sourceFile: "/test.mdx",
     });
-    expect(code).not.toContain("virtual:previewer-css");
+    expect(code).not.toContain("__markstage_css");
   });
 });

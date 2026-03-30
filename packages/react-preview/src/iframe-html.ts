@@ -33,7 +33,7 @@ export function generateIframeHtml(options: {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 ${cssLinkTags}
-  <style>html, body { margin: 0; padding: 16px; background: transparent; }</style>
+  <style>html, body { margin: 0; padding: 16px; background: transparent; overflow: hidden; }</style>
 </head>
 <body>
   <div id="root"${rootStyle}></div>
@@ -62,14 +62,32 @@ export function generatePreviewModuleCode(
   }
   const body = bodyLines.join("\n").trim();
 
+  // Virtual CSS modules (e.g. "virtual:previewer-css") don't support the
+  // ?inline query. Use ?inline only for real CSS files (package specifiers)
+  // so the CSS is inlined in JS rather than extracted to a separate file.
+  // This avoids polluting iframes with unrelated CSS when cssCodeSplit is
+  // disabled (e.g. VitePress merges all CSS into a single file).
+  const cssLines: string[] = [];
+  if (cssImport) {
+    if (cssImport.startsWith("virtual:")) {
+      cssLines.push(`import ${JSON.stringify(cssImport)};`);
+    } else {
+      cssLines.push(
+        `import __markstage_css from ${JSON.stringify(cssImport + "?inline")};`,
+        `{ const s = document.createElement("style"); s.textContent = __markstage_css; document.head.appendChild(s); }`,
+      );
+    }
+  }
+
   return [
     `import { createRoot } from "react-dom/client";`,
-    ...(cssImport ? [`import ${JSON.stringify(cssImport)};`] : []),
+    ...cssLines,
     ...blockImports,
     `function Preview() { return <>${body}</>; }`,
-    `createRoot(document.getElementById("root")).render(<Preview />);`,
+    `const __markstage_root = document.getElementById("root");`,
+    `createRoot(__markstage_root).render(<Preview />);`,
     `new ResizeObserver(() => {`,
     `  window.parent.postMessage({ type: "markstage-resize", blockId: ${JSON.stringify(blockId)}, height: document.documentElement.scrollHeight }, "*");`,
-    `}).observe(document.body);`,
+    `}).observe(__markstage_root);`,
   ].join("\n");
 }

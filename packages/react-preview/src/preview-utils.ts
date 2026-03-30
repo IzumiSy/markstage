@@ -4,6 +4,7 @@ export interface PreviewBlockEntry {
   code: string;
   sourceFile: string;
   wrap?: string;
+  height?: string;
 }
 
 export function simpleHash(str: string): string {

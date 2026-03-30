@@ -29,12 +29,10 @@ export function createMarkstagePlugin(options: MarkstageVitePressOptions = {}) {
      * Vite plugins that serve preview iframes with live React components.
      */
     vite(): Plugin[] {
-      return [
-        createBaseIframePlugin("markstage-vitepress-preview", {
-          blockRegistry,
-          cssImport: options.css,
-        }),
-      ];
+      return createBaseIframePlugin("markstage-vitepress-preview", {
+        blockRegistry,
+        cssImport: options.css,
+      });
     },
   };
 }

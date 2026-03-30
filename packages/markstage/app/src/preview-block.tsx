@@ -30,14 +30,27 @@ function hashCode(str: string): number {
   return Math.abs(hash);
 }
 
-export function PreviewBlock({ code, blockId }: { code: string; blockId: string }) {
+export function PreviewBlock({
+  code,
+  blockId,
+  height,
+}: {
+  code: string;
+  blockId: string;
+  height?: string;
+}) {
   const [open, setOpen] = useState(true);
-  const [iframeHeight, setIframeHeight] = useState(150);
+  const [iframeHeight, setIframeHeight] = useState(
+    height ? Number(height) : 150,
+  );
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     function onMessage(event: MessageEvent) {
-      if (event.data?.type === "markstage-resize" && event.data.blockId === blockId) {
+      if (
+        event.data?.type === "markstage-resize" &&
+        event.data.blockId === blockId
+      ) {
         setIframeHeight(event.data.height);
       }
     }
@@ -60,7 +73,8 @@ export function PreviewBlock({ code, blockId }: { code: string; blockId: string 
     >
       <div
         style={{
-          backgroundImage: "radial-gradient(circle, var(--border) 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, var(--border) 1px, transparent 1px)",
           backgroundSize: "16px 16px",
         }}
       >
