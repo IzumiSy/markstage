@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
 import { CodeBlock } from "./code-block";
+import { registry } from "virtual:markstage-preview-registry";
+import {
+  setupShadowPreview,
+  injectPreviewCss,
+  cleanupPreviewCss,
+} from "@izumisy/react-preview/dom";
 
 function ChevronIcon({ open }: { open: boolean }) {
   return (
@@ -22,40 +29,45 @@ function ChevronIcon({ open }: { open: boolean }) {
   );
 }
 
-function hashCode(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
-  }
-  return Math.abs(hash);
-}
-
 export function PreviewBlock({
   code,
   blockId,
   height,
+  wrap,
+  align,
 }: {
   code: string;
   blockId: string;
   height?: string;
+  wrap?: string;
+  align?: string;
 }) {
   const [open, setOpen] = useState(true);
-  const [iframeHeight, setIframeHeight] = useState(height ? Number(height) : 150);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<ReturnType<typeof createRoot> | null>(null);
 
   useEffect(() => {
-    function onMessage(event: MessageEvent) {
-      if (event.data?.type === "markstage-resize" && event.data.blockId === blockId) {
-        setIframeHeight(event.data.height);
-      }
-    }
-    window.addEventListener("message", onMessage);
-    return () => window.removeEventListener("message", onMessage);
-  }, [blockId]);
+    const el = containerRef.current;
+    if (!el) return;
 
-  // Append a version hash so the iframe reloads on code changes (HMR)
-  const version = hashCode(code);
-  const iframeSrc = `${import.meta.env.BASE_URL}__markstage_preview/${blockId}.html?v=${version}`;
+    const { shadow, mountPoint, cleanupThemeSync } = setupShadowPreview(el, {
+      align,
+      wrap,
+    });
+
+    registry[blockId]?.().then((mod) => {
+      if (mod.css) injectPreviewCss(shadow, mod.css, blockId);
+      rootRef.current = createRoot(mountPoint);
+      rootRef.current.render(<mod.default />);
+    });
+
+    return () => {
+      cleanupThemeSync();
+      rootRef.current?.unmount();
+      rootRef.current = null;
+      cleanupPreviewCss(blockId);
+    };
+  }, [blockId, wrap, align]);
 
   return (
     <div
@@ -68,20 +80,16 @@ export function PreviewBlock({
     >
       <div
         style={{
-          backgroundImage: "radial-gradient(circle, var(--border) 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, var(--border) 1px, transparent 1px)",
           backgroundSize: "16px 16px",
         }}
       >
-        <iframe
-          ref={iframeRef}
-          src={iframeSrc}
+        <div
+          ref={containerRef}
           style={{
-            width: "100%",
-            height: iframeHeight,
-            border: "none",
-            display: "block",
+            minHeight: height ? Number(height) : undefined,
           }}
-          sandbox="allow-scripts allow-same-origin"
         />
       </div>
       <div

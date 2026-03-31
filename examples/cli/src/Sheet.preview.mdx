@@ -1,0 +1,79 @@
+---
+title: Sheet
+description: AppShell Sheet component
+sidebar:
+  group: Components
+  order: 4
+---
+
+# Sheet
+
+AppShell の Sheet コンポーネントのプレビュー例です。
+
+## Basic Usage
+
+```tsx preview
+import { Sheet, Button } from "@tailor-platform/app-shell"
+
+<Sheet.Root>
+  <Sheet.Trigger asChild>
+    <Button>Open Sheet</Button>
+  </Sheet.Trigger>
+  <Sheet.Content>
+    <Sheet.Header>
+      <Sheet.Title>Sheet Title</Sheet.Title>
+      <Sheet.Description>This is a basic sheet example.</Sheet.Description>
+    </Sheet.Header>
+    <div style={{ padding: "16px" }}>
+      <p>Sheet content goes here.</p>
+    </div>
+    <Sheet.Footer>
+      <Sheet.Close asChild>
+        <Button variant="outline">Close</Button>
+      </Sheet.Close>
+    </Sheet.Footer>
+  </Sheet.Content>
+</Sheet.Root>
+```
+
+## Side Variants
+
+```tsx preview wrap="row"
+import { Sheet, Button } from "@tailor-platform/app-shell"
+
+<Sheet.Root side="right">
+  <Sheet.Trigger asChild>
+    <Button variant="outline">Right</Button>
+  </Sheet.Trigger>
+  <Sheet.Content>
+    <Sheet.Header>
+      <Sheet.Title>Right Sheet</Sheet.Title>
+      <Sheet.Description>Opens from the right side.</Sheet.Description>
+    </Sheet.Header>
+  </Sheet.Content>
+</Sheet.Root>
+
+<Sheet.Root side="left">
+  <Sheet.Trigger asChild>
+    <Button variant="outline">Left</Button>
+  </Sheet.Trigger>
+  <Sheet.Content>
+    <Sheet.Header>
+      <Sheet.Title>Left Sheet</Sheet.Title>
+      <Sheet.Description>Opens from the left side.</Sheet.Description>
+    </Sheet.Header>
+  </Sheet.Content>
+</Sheet.Root>
+
+<Sheet.Root side="bottom">
+  <Sheet.Trigger asChild>
+    <Button variant="outline">Bottom</Button>
+  </Sheet.Trigger>
+  <Sheet.Content>
+    <Sheet.Header>
+      <Sheet.Title>Bottom Sheet</Sheet.Title>
+      <Sheet.Description>Opens from the bottom.</Sheet.Description>
+    </Sheet.Header>
+  </Sheet.Content>
+</Sheet.Root>
+```

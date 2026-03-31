@@ -1,7 +1,7 @@
 {
   "name": "@izumisy/vitepress-plugin-react-preview",
   "version": "1.0.0",
-  "description": "VitePress plugin for rendering React component previews via iframe",
+  "description": "VitePress plugin for rendering React component previews via shadow DOM",
   "type": "module",
   "exports": {
     ".": {
@@ -25,15 +25,17 @@
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^22",
+    "@types/node": "catalog:",
     "markdown-it": "^14.1.0",
-    "tsdown": "^0.21.3",
-    "typescript": "~5.9.3",
-    "vite": "^6.3.5",
-    "vitest": "^4.1.2"
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
     "markdown-it": ">=14",
+    "react": ">=18",
+    "react-dom": ">=18",
     "vite": ">=6",
     "vue": ">=3"
   }

@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { resolve } from "node:path";
 
 export interface PreviewBlockEntry {
   code: string;
@@ -22,4 +23,19 @@ export function parseMeta(meta: string): Record<string, string> {
     result[m[1]] = m[2];
   }
   return result;
+}
+
+/**
+ * Resolve a CSS path for Vite consumption.
+ *
+ * - Bare package specifiers (e.g. "@foo/bar/styles", "some-pkg/styles.css")
+ *   are returned as-is so Vite resolves them from node_modules.
+ * - Relative or absolute paths are resolved against `hostRoot`.
+ */
+export function resolveCssImportPath(css: string, hostRoot?: string): string {
+  const isPackageSpecifier =
+    css.startsWith("@") || (!css.startsWith(".") && !css.startsWith("/"));
+  if (isPackageSpecifier) return css;
+  if (hostRoot) return resolve(hostRoot, css);
+  return css;
 }

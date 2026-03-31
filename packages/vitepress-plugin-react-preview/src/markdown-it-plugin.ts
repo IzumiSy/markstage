@@ -9,7 +9,7 @@ import {
  * Create a markdown-it plugin that transforms ` ```tsx preview ` fenced code blocks
  * into a `<PreviewBlock>` Vue component with the code passed as props.
  *
- * Blocks are registered in the shared registry so the iframe Vite plugin
+ * Blocks are registered in the shared registry so the preview Vite plugin
  * can serve the preview pages.
  *
  * The code is base64-encoded to avoid escaping issues in HTML attributes.
@@ -33,7 +33,7 @@ export function createMarkdownItPlugin(
 
         const meta = parseMeta(info.slice("tsx preview".length));
 
-        // Register block in the shared registry for the iframe plugin
+        // Register block in the shared registry for the preview plugin
         blockRegistry.set(blockId, {
           code,
           sourceFile: "",
@@ -46,8 +46,10 @@ export function createMarkdownItPlugin(
         const encodedHighlighted = Buffer.from(highlighted).toString("base64");
 
         const heightAttr = meta.height ? ` height="${meta.height}"` : "";
+        const wrapAttr = meta.wrap ? ` wrap="${meta.wrap}"` : "";
+        const alignAttr = meta.align ? ` align="${meta.align}"` : "";
 
-        return `<PreviewBlock code="${encodedCode}" block-id="${blockId}" highlighted="${encodedHighlighted}"${heightAttr} />\n`;
+        return `<PreviewBlock code="${encodedCode}" block-id="${blockId}" highlighted="${encodedHighlighted}"${heightAttr}${wrapAttr}${alignAttr} />\n`;
       }
 
       return defaultFence(tokens, idx, options, env, self);

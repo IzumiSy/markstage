@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { simpleHash, parseMeta } from "./preview-utils";
+import { simpleHash, parseMeta, resolveCssImportPath } from "./preview-utils";
 
 describe("simpleHash", () => {
   it("returns an 8-character hex string", () => {
@@ -35,5 +35,32 @@ describe("parseMeta", () => {
 
   it("returns empty object for string without valid pairs", () => {
     expect(parseMeta("no-pairs-here")).toEqual({});
+  });
+});
+
+describe("resolveCssImportPath", () => {
+  it("returns scoped package specifier as-is", () => {
+    expect(resolveCssImportPath("@foo/bar/styles")).toBe("@foo/bar/styles");
+  });
+
+  it("returns non-scoped package specifier as-is", () => {
+    expect(resolveCssImportPath("some-package/styles.css")).toBe(
+      "some-package/styles.css",
+    );
+  });
+
+  it("resolves relative path against hostRoot", () => {
+    const result = resolveCssImportPath("./src/global.css", "/project");
+    expect(result).toContain("/project/src/global.css");
+  });
+
+  it("resolves absolute path as-is", () => {
+    expect(resolveCssImportPath("/abs/styles.css", "/project")).toBe(
+      "/abs/styles.css",
+    );
+  });
+
+  it("returns relative path as-is when hostRoot is not provided", () => {
+    expect(resolveCssImportPath("./src/global.css")).toBe("./src/global.css");
   });
 });

@@ -15,10 +15,12 @@ AppShell の Combobox コンポーネントのプレビュー例です。
 ```tsx preview height="300"
 import { Combobox } from "@tailor-platform/app-shell"
 
-<Combobox
-  items={["Apple", "Banana", "Cherry", "Grape", "Orange"]}
-  placeholder="Select a fruit..."
-/>
+<div style={{ width: "500px" }}>
+  <Combobox
+    items={["Apple", "Banana", "Cherry", "Grape", "Orange"]}
+    placeholder="Select a fruit..."
+  />
+</div>
 ```
 
 ## Multiple Selection
@@ -26,9 +28,11 @@ import { Combobox } from "@tailor-platform/app-shell"
 ```tsx preview height="300"
 import { Combobox } from "@tailor-platform/app-shell"
 
-<Combobox
-  items={["React", "Vue", "Angular", "Svelte", "Solid"]}
-  multiple
-  placeholder="Select frameworks..."
-/>
+<div style={{ width: "500px" }}>
+  <Combobox
+    items={["React", "Vue", "Angular", "Svelte", "Solid"]}
+    multiple
+    placeholder="Select frameworks..."
+  />
+</div>
 ```

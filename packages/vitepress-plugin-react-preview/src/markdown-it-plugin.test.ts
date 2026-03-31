@@ -57,10 +57,10 @@ describe("markdownItPreviewPlugin", () => {
     expect(entry.code).toBe("<A />\n<B />");
   });
 
-  it("does not include wrap attribute in rendered HTML", () => {
+  it("includes wrap attribute in rendered HTML", () => {
     const input = '```tsx preview wrap="row"\n<A />\n```';
     const { html: result } = render(input, { relativePath: "test.md" });
 
-    expect(result).not.toContain("wrap=");
+    expect(result).toContain('wrap="row"');
   });
 });

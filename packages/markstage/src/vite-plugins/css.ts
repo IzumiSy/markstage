@@ -1,5 +1,5 @@
-import { resolve } from "node:path";
 import type { Plugin } from "vite";
+import { resolveCssImportPath } from "@izumisy/react-preview";
 
 /**
  * Virtual module `virtual:previewer-css` — imports the host project's
@@ -22,12 +22,7 @@ export function previewerCssPlugin(hostRoot: string, css?: string): Plugin {
       if (id !== RESOLVED_ID) return;
       if (!css) return "";
 
-      // If the path looks like a bare package specifier (e.g. "@foo/bar/styles"),
-      // pass it through as-is so Vite resolves it from node_modules.
-      // Otherwise resolve it relative to the host project root.
-      const isPackageSpecifier =
-        css.startsWith("@") || (!css.startsWith(".") && !css.startsWith("/"));
-      const cssPath = isPackageSpecifier ? css : resolve(hostRoot, css);
+      const cssPath = resolveCssImportPath(css, hostRoot);
       return `@import ${JSON.stringify(cssPath)};`;
     },
   };

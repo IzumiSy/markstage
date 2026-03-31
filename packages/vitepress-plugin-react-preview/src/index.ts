@@ -1,10 +1,10 @@
 import type { Plugin } from "vite";
 import type { PreviewBlockEntry } from "@izumisy/react-preview";
-import { createBaseIframePlugin } from "@izumisy/react-preview";
+import { createBasePreviewPlugin } from "@izumisy/react-preview";
 import { createMarkdownItPlugin } from "./markdown-it-plugin";
 
 export type MarkstageVitePressOptions = {
-  /** CSS file to inject into preview iframes (e.g. your component library's stylesheet) */
+  /** CSS file to inject into preview blocks (e.g. your component library's stylesheet) */
   css?: string;
 };
 
@@ -13,7 +13,7 @@ export type MarkstageVitePressOptions = {
  *
  * Returns an object with:
  * - `markdownIt`: markdown-it plugin that transforms ` ```tsx preview ` fences
- * - `vite()`: Vite plugins that serve preview iframes with live React components
+ * - `vite()`: Vite plugins that serve preview blocks with live React components
  */
 export function createMarkstagePlugin(options: MarkstageVitePressOptions = {}) {
   const blockRegistry = new Map<string, PreviewBlockEntry>();
@@ -26,10 +26,10 @@ export function createMarkstagePlugin(options: MarkstageVitePressOptions = {}) {
     markdownIt: createMarkdownItPlugin(blockRegistry),
 
     /**
-     * Vite plugins that serve preview iframes with live React components.
+     * Vite plugins that provide virtual modules for preview blocks.
      */
     vite(): Plugin[] {
-      return createBaseIframePlugin("markstage-vitepress-preview", {
+      return createBasePreviewPlugin("markstage-vitepress-preview", {
         blockRegistry,
         cssImport: options.css,
       });

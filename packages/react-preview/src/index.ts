@@ -1,13 +1,19 @@
-export { type PreviewBlockEntry, simpleHash, parseMeta } from "./preview-utils";
+export {
+  type PreviewBlockEntry,
+  simpleHash,
+  parseMeta,
+  resolveCssImportPath,
+} from "./preview-utils";
 export {
   VIRTUAL_PREFIX,
-  PREVIEW_ROUTE,
+  REGISTRY_MODULE_ID,
   WRAP_STYLES,
-  generateIframeHtml,
+  ALIGN_STYLES,
+  adaptCssForShadowDom,
   generatePreviewModuleCode,
-} from "./iframe-html";
+} from "./preview-module";
 export {
-  type IframePluginOptions,
-  createIframeHooks,
-  createBaseIframePlugin,
-} from "./iframe-plugin";
+  type PreviewPluginOptions,
+  createPreviewHooks,
+  createBasePreviewPlugin,
+} from "./preview-plugin";

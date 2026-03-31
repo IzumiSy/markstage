@@ -4,6 +4,33 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@tailor-platform/app-shell':
+      specifier: ^0.31.1
+      version: 0.31.1
+    '@types/node':
+      specifier: ^22
+      version: 22.19.15
+    react:
+      specifier: ^19.2.4
+      version: 19.2.4
+    react-dom:
+      specifier: ^19.2.4
+      version: 19.2.4
+    tsdown:
+      specifier: ^0.21.3
+      version: 0.21.4
+    typescript:
+      specifier: ~5.9.3
+      version: 5.9.3
+    vite:
+      specifier: ^6.3.5
+      version: 6.4.1
+    vitest:
+      specifier: ^4.1.2
+      version: 4.1.2
+
 importers:
 
   .:
@@ -18,13 +45,13 @@ importers:
         specifier: workspace:*
         version: link:../../packages/markstage
       '@tailor-platform/app-shell':
-        specifier: ^0.31.1
+        specifier: 'catalog:'
         version: 0.31.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
       react:
-        specifier: ^19.2.4
+        specifier: 'catalog:'
         version: 19.2.4
       react-dom:
-        specifier: ^19.2.4
+        specifier: 'catalog:'
         version: 19.2.4(react@19.2.4)
 
   examples/vitepress:
@@ -33,13 +60,13 @@ importers:
         specifier: workspace:*
         version: link:../../packages/vitepress-plugin-react-preview
       '@tailor-platform/app-shell':
-        specifier: ^0.31.1
+        specifier: 'catalog:'
         version: 0.31.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
       react:
-        specifier: ^19.2.4
+        specifier: 'catalog:'
         version: 19.2.4
       react-dom:
-        specifier: ^19.2.4
+        specifier: 'catalog:'
         version: 19.2.4(react@19.2.4)
     devDependencies:
       vitepress:
@@ -79,10 +106,10 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       react:
-        specifier: ^19.2.4
+        specifier: 'catalog:'
         version: 19.2.4
       react-dom:
-        specifier: ^19.2.4
+        specifier: 'catalog:'
         version: 19.2.4(react@19.2.4)
       remark-frontmatter:
         specifier: ^5.0.0
@@ -97,11 +124,11 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
       vite:
-        specifier: ^6.3.5
+        specifier: 'catalog:'
         version: 6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3)
     devDependencies:
       '@types/node':
-        specifier: ^22
+        specifier: 'catalog:'
         version: 22.19.15
       '@types/react':
         specifier: ^19
@@ -116,32 +143,32 @@ importers:
         specifier: ^1.56.0
         version: 1.56.0
       tsdown:
-        specifier: ^0.21.3
+        specifier: 'catalog:'
         version: 0.21.4(typescript@5.9.3)
       typescript:
-        specifier: ~5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
       vitest:
-        specifier: ^4.1.2
+        specifier: 'catalog:'
         version: 4.1.2(@types/node@22.19.15)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
 
   packages/react-preview:
     dependencies:
       vite:
-        specifier: ^6.3.5
+        specifier: 'catalog:'
         version: 6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3)
     devDependencies:
       '@types/node':
-        specifier: ^22
+        specifier: 'catalog:'
         version: 22.19.15
       tsdown:
-        specifier: ^0.21.3
+        specifier: 'catalog:'
         version: 0.21.4(typescript@5.9.3)
       typescript:
-        specifier: ~5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
       vitest:
-        specifier: ^4.1.2
+        specifier: 'catalog:'
         version: 4.1.2(@types/node@22.19.15)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
 
   packages/vitepress-plugin-react-preview:
@@ -149,6 +176,12 @@ importers:
       '@izumisy/react-preview':
         specifier: workspace:*
         version: link:../react-preview
+      react:
+        specifier: '>=18'
+        version: 19.2.4
+      react-dom:
+        specifier: '>=18'
+        version: 19.2.4(react@19.2.4)
       vue:
         specifier: '>=3'
         version: 3.5.31(typescript@5.9.3)
@@ -157,22 +190,22 @@ importers:
         specifier: ^14.1.2
         version: 14.1.2
       '@types/node':
-        specifier: ^22
+        specifier: 'catalog:'
         version: 22.19.15
       markdown-it:
         specifier: ^14.1.0
         version: 14.1.1
       tsdown:
-        specifier: ^0.21.3
+        specifier: 'catalog:'
         version: 0.21.4(typescript@5.9.3)
       typescript:
-        specifier: ~5.9.3
+        specifier: 'catalog:'
         version: 5.9.3
       vite:
-        specifier: ^6.3.5
+        specifier: 'catalog:'
         version: 6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3)
       vitest:
-        specifier: ^4.1.2
+        specifier: 'catalog:'
         version: 4.1.2(@types/node@22.19.15)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
 
 packages:

@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@izumisy/vitepress-plugin-react-preview": "workspace:*",
-    "@tailor-platform/app-shell": "^0.31.1",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "@tailor-platform/app-shell": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "vitepress": "^1.6.3",

@@ -6,7 +6,7 @@ const markstage = createMarkstagePlugin({
 });
 
 export default defineConfig({
-  title: "Markstage + VitePress Example",
+  title: "VitePress Example",
   description: "Example of using Markstage preview blocks in VitePress",
 
   themeConfig: {
@@ -16,6 +16,8 @@ export default defineConfig({
         items: [
           { text: "Button", link: "/examples/button" },
           { text: "Combobox", link: "/examples/combobox" },
+          { text: "Sheet", link: "/examples/sheet" },
+          { text: "Table", link: "/examples/table" },
         ],
       },
     ],

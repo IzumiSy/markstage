@@ -7,10 +7,9 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import remarkGfm from "remark-gfm";
 import type { InlineConfig, Plugin, PluginOption } from "vite";
-import { previewCodePlugin } from "./plugins/previewer-code";
-import { previewerIframePlugin } from "./plugins/previewer-iframe";
-import { previewerEntriesPlugin } from "./plugins/previewer-entries";
-import { previewerCssPlugin } from "./plugins/previewer-css";
+import { previewPlugin } from "./vite-plugins/preview";
+import { previewerEntriesPlugin } from "./vite-plugins/entries";
+import { previewerCssPlugin } from "./vite-plugins/css";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const APP_DIR = resolve(__dirname, "..", "app");
@@ -62,8 +61,10 @@ export function createPreviewerViteConfig(options: {
       },
     },
     plugins: [
-      previewCodePlugin(),
-      previewerIframePlugin(options.resolveFiles),
+      previewPlugin(options.resolveFiles, {
+        css: options.css,
+        hostRoot: options.root,
+      }),
       {
         enforce: "pre",
         ...mdx({

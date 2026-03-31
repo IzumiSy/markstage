@@ -4,7 +4,7 @@
   "packageManager": "pnpm@10.24.0",
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo watch build",
+    "dev": "turbo watch dev --filter='./examples/*'",
     "lint": "turbo run lint",
     "fmt": "turbo run fmt",
     "fmt:check": "turbo run fmt:check",

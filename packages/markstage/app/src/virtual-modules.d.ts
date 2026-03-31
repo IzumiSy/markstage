@@ -24,5 +24,12 @@ declare module "virtual:previewer-entries" {
 
 declare module "virtual:previewer-css" {}
 
+declare module "virtual:markstage-preview-registry" {
+  export const registry: Record<
+    string,
+    () => Promise<{ default: import("react").FC; css: string }>
+  >;
+}
+
 declare const __PREVIEWER_TITLE__: string;
 declare const __PREVIEWER_REPO__: { url: string; ref: string } | null;

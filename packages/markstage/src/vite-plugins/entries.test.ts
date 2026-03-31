@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { resolve } from "node:path";
 import { mkdtemp, writeFile, mkdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { previewerEntriesPlugin } from "./previewer-entries";
+import { previewerEntriesPlugin } from "./entries";
 import { glob } from "node:fs/promises";
 
 function createResolver(cwd: string, pattern: string): () => Promise<string[]> {
@@ -28,7 +28,10 @@ describe("previewerEntriesPlugin", () => {
   });
 
   it("resolves virtual:previewer-entries to internal id", () => {
-    const plugin = previewerEntriesPlugin(tmpDir, createResolver(tmpDir, "src/**/*.preview.mdx"));
+    const plugin = previewerEntriesPlugin(
+      tmpDir,
+      createResolver(tmpDir, "src/**/*.preview.mdx"),
+    );
     const resolved = (plugin.resolveId as (id: string) => string | undefined)(
       "virtual:previewer-entries",
     );
@@ -36,20 +39,34 @@ describe("previewerEntriesPlugin", () => {
   });
 
   it("returns undefined for non-matching resolve id", () => {
-    const plugin = previewerEntriesPlugin(tmpDir, createResolver(tmpDir, "src/**/*.preview.mdx"));
-    const resolved = (plugin.resolveId as (id: string) => string | undefined)("other-module");
+    const plugin = previewerEntriesPlugin(
+      tmpDir,
+      createResolver(tmpDir, "src/**/*.preview.mdx"),
+    );
+    const resolved = (plugin.resolveId as (id: string) => string | undefined)(
+      "other-module",
+    );
     expect(resolved).toBeUndefined();
   });
 
   it("generates import statements and entries array for discovered files", async () => {
     await mkdir(resolve(tmpDir, "src"), { recursive: true });
-    await writeFile(resolve(tmpDir, "src/Button.preview.mdx"), "---\ntitle: Button\n---\n# Button");
-    await writeFile(resolve(tmpDir, "src/Input.preview.mdx"), "---\ntitle: Input\n---\n# Input");
-
-    const plugin = previewerEntriesPlugin(tmpDir, createResolver(tmpDir, "src/**/*.preview.mdx"));
-    const code = await (plugin.load as (id: string) => Promise<string | undefined>)(
-      "\0virtual:previewer-entries",
+    await writeFile(
+      resolve(tmpDir, "src/Button.preview.mdx"),
+      "---\ntitle: Button\n---\n# Button",
     );
+    await writeFile(
+      resolve(tmpDir, "src/Input.preview.mdx"),
+      "---\ntitle: Input\n---\n# Input",
+    );
+
+    const plugin = previewerEntriesPlugin(
+      tmpDir,
+      createResolver(tmpDir, "src/**/*.preview.mdx"),
+    );
+    const code = await (
+      plugin.load as (id: string) => Promise<string | undefined>
+    )("\0virtual:previewer-entries");
     expect(code).toBeDefined();
     expect(code).toContain("import Mod0");
     expect(code).toContain("import Mod1");
@@ -58,10 +75,13 @@ describe("previewerEntriesPlugin", () => {
   });
 
   it("returns undefined for non-matching load id", async () => {
-    const plugin = previewerEntriesPlugin(tmpDir, createResolver(tmpDir, "src/**/*.preview.mdx"));
-    const code = await (plugin.load as (id: string) => Promise<string | undefined>)(
-      "some-other-id",
+    const plugin = previewerEntriesPlugin(
+      tmpDir,
+      createResolver(tmpDir, "src/**/*.preview.mdx"),
     );
+    const code = await (
+      plugin.load as (id: string) => Promise<string | undefined>
+    )("some-other-id");
     expect(code).toBeUndefined();
   });
 });

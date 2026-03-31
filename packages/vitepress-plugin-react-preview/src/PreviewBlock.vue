@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import {
+  setupShadowPreview,
+  injectPreviewCss,
+  cleanupPreviewCss,
+} from "@izumisy/react-preview/dom";
 
 const props = defineProps<{
   code: string;
   blockId: string;
   highlighted?: string;
   height?: string;
+  wrap?: string;
+  align?: string;
 }>();
 
-const iframeHeight = ref(props.height ? Number(props.height) : 150);
 const showCode = ref(true);
-const iframeRef = ref<HTMLIFrameElement | null>(null);
+const containerRef = ref<HTMLDivElement | null>(null);
 
 const decodedCode = computed(() => {
   try {
@@ -29,37 +35,56 @@ const decodedHighlighted = computed(() => {
   }
 });
 
-const iframeSrc = computed(() => {
-  return `/__markstage_preview/${props.blockId}`;
-});
+let reactRoot: any = null;
+let cleanupThemeSyncFn: (() => void) | null = null;
 
-function onMessage(event: MessageEvent) {
-  if (
-    event.data?.type === "markstage-resize" &&
-    event.data.blockId === props.blockId
-  ) {
-    iframeHeight.value = event.data.height;
-  }
-}
+onMounted(async () => {
+  const el = containerRef.value;
+  if (!el) return;
 
-onMounted(() => {
-  window.addEventListener("message", onMessage);
+  const [{ createElement }, { createRoot }] = await Promise.all([
+    import("react"),
+    import("react-dom/client"),
+  ]);
+
+  const { shadow, mountPoint, cleanupThemeSync } = setupShadowPreview(el, {
+    align: props.align,
+    wrap: props.wrap,
+  });
+  cleanupThemeSyncFn = cleanupThemeSync;
+
+  // In dev mode, import each block module directly to avoid stale registry
+  // issues. VitePress lazily processes pages, so the centralized registry
+  // module may not contain blocks from pages that haven't been visited yet.
+  // In build mode all pages are processed upfront, so the registry is safe.
+  const mod = import.meta.env.DEV
+    ? await import(/* @vite-ignore */ `/virtual:markstage-preview-${props.blockId}`)
+    : await import("virtual:markstage-preview-registry").then(
+        (r) => r.registry[props.blockId]?.(),
+      );
+  if (!mod) return;
+
+  if (mod.css) injectPreviewCss(shadow, mod.css, props.blockId);
+
+  reactRoot = createRoot(mountPoint);
+  reactRoot.render(createElement(mod.default));
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("message", onMessage);
+  cleanupThemeSyncFn?.();
+  cleanupThemeSyncFn = null;
+  reactRoot?.unmount();
+  reactRoot = null;
+  cleanupPreviewCss(props.blockId);
 });
 </script>
 
 <template>
-  <div class="markstage-preview">
+  <div class="markstage-preview vp-raw">
     <div class="markstage-preview-render">
-      <iframe
-        ref="iframeRef"
-        :src="iframeSrc"
-        :style="{ height: iframeHeight + 'px' }"
-        frameborder="0"
-        sandbox="allow-scripts allow-same-origin"
+      <div
+        ref="containerRef"
+        :style="{ minHeight: height ? height + 'px' : undefined }"
       />
     </div>
     <div class="markstage-preview-code">
@@ -106,12 +131,6 @@ onBeforeUnmount(() => {
     transparent 1px
   );
   background-size: 16px 16px;
-}
-
-.markstage-preview-render iframe {
-  width: 100%;
-  border: none;
-  display: block;
 }
 
 .markstage-preview-code {
