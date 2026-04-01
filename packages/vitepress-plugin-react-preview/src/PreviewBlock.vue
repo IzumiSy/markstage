@@ -33,10 +33,11 @@ const decodedHighlighted = computed(() => {
   }
 });
 
-const currentTheme = computed(() => {
-  if (typeof document === "undefined") return "light";
-  return document.documentElement.classList.contains("dark") ? "dark" : "light";
-});
+const currentTheme = ref(
+  typeof document !== "undefined" && document.documentElement.classList.contains("dark")
+    ? "dark"
+    : "light"
+);
 
 const previewUrl = computed(() => {
   const params = new URLSearchParams({ theme: currentTheme.value });
@@ -44,6 +45,18 @@ const previewUrl = computed(() => {
   if (props.align) params.set("align", props.align);
   return `/__preview/${props.blockId}?${params}`;
 });
+
+let themeObserver: MutationObserver | null = null;
+
+function syncThemeToIframe() {
+  const iframe = iframeRef.value;
+  if (iframe?.contentWindow) {
+    iframe.contentWindow.postMessage(
+      { type: "markstage-theme", theme: currentTheme.value },
+      "*"
+    );
+  }
+}
 
 function onMessage(e: MessageEvent) {
   if (
@@ -56,10 +69,24 @@ function onMessage(e: MessageEvent) {
 
 onMounted(() => {
   window.addEventListener("message", onMessage);
+
+  themeObserver = new MutationObserver(() => {
+    const isDark = document.documentElement.classList.contains("dark");
+    const newTheme = isDark ? "dark" : "light";
+    if (currentTheme.value !== newTheme) {
+      currentTheme.value = newTheme;
+      syncThemeToIframe();
+    }
+  });
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("message", onMessage);
+  themeObserver?.disconnect();
 });
 </script>
 

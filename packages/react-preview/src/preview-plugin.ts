@@ -112,10 +112,20 @@ var blockId = location.pathname.split("/").pop().replace(/\\.html$/, "");
 var params = new URLSearchParams(location.search);
 
 var themeParam = params.get("theme");
-if (themeParam === "dark" || themeParam === "light") {
-  document.documentElement.setAttribute("data-theme", themeParam);
-  document.documentElement.classList.add(themeParam);
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  document.documentElement.classList.remove("light", "dark");
+  document.documentElement.classList.add(theme);
+  document.documentElement.style.colorScheme = theme;
 }
+if (themeParam === "dark" || themeParam === "light") {
+  applyTheme(themeParam);
+}
+window.addEventListener("message", function(e) {
+  if (e.data && e.data.type === "markstage-theme" && (e.data.theme === "dark" || e.data.theme === "light")) {
+    applyTheme(e.data.theme);
+  }
+});
 
 var wrapParam = params.get("wrap");
 var alignParam = params.get("align");
@@ -183,8 +193,8 @@ export function createBasePreviewPlugin(
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preview</title>
   </head>
-  <body style="margin:0">
-    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px;background:#ffffff"></div>
+  <body style="margin:0;background:transparent">
+    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px"></div>
     <script type="module" src="/${STANDALONE_CLIENT_MODULE_ID}"></script>
   </body>
 </html>`;
@@ -316,8 +326,8 @@ export function createPreviewBuildPlugin(
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preview</title>
   </head>
-  <body style="margin:0">
-    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px;background:#ffffff"></div>
+  <body style="margin:0;background:transparent">
+    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px"></div>
     <script type="module" src="/${standaloneFileName}"></script>
   </body>
 </html>`;
