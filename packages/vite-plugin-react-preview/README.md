@@ -42,13 +42,32 @@ This package is not typically used directly. It is consumed by:
 If you are building a custom integration, use `createBasePreviewPlugin()` with a block registry:
 
 ```ts
-import { createBasePreviewPlugin, type PreviewBlockEntry } from "@izumisy/vite-plugin-react-preview";
+import {
+  createBasePreviewPlugin,
+  createPreviewBuildPlugin,
+  type PreviewBlockEntry,
+} from "@izumisy/vite-plugin-react-preview";
 
+// blockRegistry is defined externally so that multiple plugins (e.g. a
+// markdown-it plugin that registers blocks and the Vite plugin that serves
+// them) can share the same mutable state.
 const blockRegistry = new Map<string, PreviewBlockEntry>();
 
-const plugins = createBasePreviewPlugin("my-preview-plugin", {
+// createBasePreviewPlugin: provides virtual module resolution, code
+// generation, JSX compilation, and the dev server middleware for serving
+// standalone preview pages at /__preview/:blockId.
+const basePlugins = createBasePreviewPlugin("my-preview-plugin", {
   blockRegistry,
   cssImport: "@my-lib/styles",
+});
+
+// createPreviewBuildPlugin: production build only — emits static HTML pages
+// for each preview block so they can be embedded as iframes in the built site.
+const buildPlugin = createPreviewBuildPlugin({
+  blockRegistry,
+  scanBlocks: (root) => {
+    // Populate blockRegistry before Rollup resolves virtual modules.
+  },
 });
 ```
 
