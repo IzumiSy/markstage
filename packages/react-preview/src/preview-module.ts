@@ -45,7 +45,7 @@ export function generateStandaloneHtml(scriptSrc: string): string {
  *
  * The module exports a React component as default and the CSS string as `css`.
  * The host component (e.g. PreviewBlock) is responsible for mounting the
- * component into a shadow DOM container and injecting the CSS.
+ * component into an iframe container and injecting the CSS.
  */
 export function generatePreviewModuleCode(
   _blockId: string,
