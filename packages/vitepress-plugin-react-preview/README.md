@@ -2,13 +2,13 @@
 
 VitePress plugin for rendering live React component previews inside your VitePress documentation site.
 
-Transforms `` ```tsx preview `` fenced blocks in Markdown into interactive previews rendered via Shadow DOM, with full style isolation and dark mode support.
+Transforms `` ```tsx preview `` fenced blocks in Markdown into interactive previews rendered via iframes, with full style isolation and dark mode support.
 
 ## Features
 
 - **markdown-it plugin** — rewrites `` ```tsx preview `` blocks into `<PreviewBlock>` Vue components at the Markdown parsing stage
 - **Vite plugin** — serves preview modules and standalone preview pages using `@izumisy/react-preview` under the hood
-- **Style isolation** — inline previews render inside Shadow DOM; standalone previews run in a separate page
+- **Style isolation** — inline previews render inside iframes; standalone previews run in a separate page
 - **Dark mode** — syncs with VitePress theme toggle via `postMessage`
 - **Build support** — emits standalone HTML pages (`/__preview/{blockId}.html`) during `vitepress build`
 
@@ -68,7 +68,7 @@ import { Sheet } from "@my-lib"
 ```
 ````
 
-- **inline** (default) — rendered within the page via Shadow DOM
+- **inline** (default) — rendered within the page via iframe
 - **standalone** — shows a code block with a link to a full-viewport preview page
 
 ## License

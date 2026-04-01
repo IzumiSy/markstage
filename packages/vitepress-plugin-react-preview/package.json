@@ -1,7 +1,7 @@
 {
   "name": "@izumisy/vitepress-plugin-react-preview",
   "version": "1.0.0",
-  "description": "VitePress plugin for rendering React component previews via shadow DOM",
+  "description": "VitePress plugin for rendering React component previews via iframe",
   "type": "module",
   "exports": {
     ".": {

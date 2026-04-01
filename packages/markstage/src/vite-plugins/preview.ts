@@ -20,7 +20,7 @@ export type PreviewPluginResult = {
  * 1. Transforms ` ```tsx preview ` fenced code blocks in .preview.mdx files
  *    into `<PreviewBlock>` components (runs before the MDX compiler).
  * 2. Provides virtual modules for each preview block so they can be rendered
- *    in isolated shadow-DOM containers.
+ *    in isolated iframe containers.
  * 3. Handles HMR invalidation when preview files change.
  * 4. In build mode, scans preview files upfront to populate the block registry.
  */
@@ -31,7 +31,7 @@ export function previewPlugin(
   const blockRegistry = new Map<string, PreviewBlockEntry>();
   let devServer: ViteDevServer | null = null;
 
-  // Resolve CSS path for shadow DOM injection
+  // Resolve CSS path for iframe injection
   const cssImport = options?.css ? resolveCssImportPath(options.css, options.hostRoot) : undefined;
 
   // Reuse the base preview plugin for virtual modules + standalone server
