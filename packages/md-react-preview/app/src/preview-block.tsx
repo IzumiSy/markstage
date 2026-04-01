@@ -99,9 +99,7 @@ export function PreviewBlock({
 }) {
   const DEFAULT_HEIGHT = 200;
   const [open, setOpen] = useState(true);
-  const [iframeHeight, setIframeHeight] = useState(
-    height ? Number(height) : DEFAULT_HEIGHT,
-  );
+  const [iframeHeight, setIframeHeight] = useState(height ? Number(height) : DEFAULT_HEIGHT);
   const { colorScheme } = useTheme();
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -115,10 +113,7 @@ export function PreviewBlock({
   const initialColorScheme = useRef(colorScheme);
   useEffect(() => {
     if (colorScheme === initialColorScheme.current) return;
-    iframeRef.current?.contentWindow?.postMessage(
-      { type: "mrp-theme", theme: colorScheme },
-      "*",
-    );
+    iframeRef.current?.contentWindow?.postMessage({ type: "mrp-theme", theme: colorScheme }, "*");
   }, [colorScheme]);
 
   useEffect(() => {
@@ -216,11 +211,7 @@ export function PreviewBlock({
           />
         </div>
       )}
-      <CodeSection
-        code={code}
-        open={open}
-        onToggle={() => setOpen((v) => !v)}
-      />
+      <CodeSection code={code} open={open} onToggle={() => setOpen((v) => !v)} />
     </div>
   );
 }
