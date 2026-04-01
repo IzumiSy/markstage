@@ -1,0 +1,76 @@
+# @izumisy/vitepress-plugin-react-preview
+
+VitePress plugin for rendering live React component previews inside your VitePress documentation site.
+
+Transforms `` ```tsx preview `` fenced blocks in Markdown into interactive previews rendered via Shadow DOM, with full style isolation and dark mode support.
+
+## Features
+
+- **markdown-it plugin** — rewrites `` ```tsx preview `` blocks into `<PreviewBlock>` Vue components at the Markdown parsing stage
+- **Vite plugin** — serves preview modules and standalone preview pages using `@izumisy/react-preview` under the hood
+- **Style isolation** — inline previews render inside Shadow DOM; standalone previews run in a separate page
+- **Dark mode** — syncs with VitePress theme toggle via `postMessage`
+- **Build support** — emits standalone HTML pages (`/__preview/{blockId}.html`) during `vitepress build`
+
+## Install
+
+```bash
+pnpm add -D @izumisy/vitepress-plugin-react-preview
+```
+
+## Setup
+
+In your VitePress config (`.vitepress/config.ts`):
+
+```ts
+import { defineConfig } from "vitepress";
+import { createMarkstagePlugin } from "@izumisy/vitepress-plugin-react-preview";
+
+const markstage = createMarkstagePlugin({
+  css: "@my-lib/styles", // optional: CSS to inject into previews
+});
+
+export default defineConfig({
+  markdown: {
+    config(md) {
+      md.use(markstage.markdownIt);
+    },
+  },
+  vite: {
+    plugins: [markstage.vite()],
+  },
+});
+```
+
+Then use `<PreviewBlock>` in your theme if needed:
+
+```vue
+<script setup>
+import PreviewBlock from "@izumisy/vitepress-plugin-react-preview/PreviewBlock.vue";
+</script>
+```
+
+## Preview Syntax
+
+Works with the same `` ```tsx preview `` syntax as `@izumisy/markstage`:
+
+````md
+```tsx preview
+import { Button } from "@my-lib"
+
+<Button>Click me</Button>
+```
+
+```tsx preview standalone
+import { Sheet } from "@my-lib"
+
+<Sheet.Root>...</Sheet.Root>
+```
+````
+
+- **inline** (default) — rendered within the page via Shadow DOM
+- **standalone** — shows a code block with a link to a full-viewport preview page
+
+## License
+
+MIT
