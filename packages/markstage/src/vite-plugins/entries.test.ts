@@ -3,16 +3,10 @@ import { resolve } from "node:path";
 import { mkdtemp, writeFile, mkdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { previewerEntriesPlugin } from "./entries";
-import { glob } from "node:fs/promises";
+import fg from "fast-glob";
 
 function createResolver(cwd: string, pattern: string): () => Promise<string[]> {
-  return async () => {
-    const files: string[] = [];
-    for await (const entry of glob(pattern, { cwd })) {
-      files.push(resolve(cwd, entry));
-    }
-    return files;
-  };
+  return () => fg(pattern, { cwd, absolute: true });
 }
 
 describe("previewerEntriesPlugin", () => {
