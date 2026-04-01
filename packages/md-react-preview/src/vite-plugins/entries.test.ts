@@ -13,7 +13,7 @@ describe("previewerEntriesPlugin", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await mkdtemp(resolve(tmpdir(), "markstage-test-"));
+    tmpDir = await mkdtemp(resolve(tmpdir(), "mrp-test-"));
   });
 
   // oxlint-disable-next-line -- cleanup

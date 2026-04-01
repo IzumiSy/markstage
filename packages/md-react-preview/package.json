@@ -1,9 +1,9 @@
 {
-  "name": "@izumisy/markstage",
+  "name": "@izumisy/md-react-preview",
   "version": "1.0.0",
-  "description": "Markstage — component previewer powered by MDX",
+  "description": "md-react-preview — component previewer powered by MDX",
   "bin": {
-    "markstage": "./dist/cli.mjs"
+    "mrp": "./dist/cli.mjs"
   },
   "files": [
     "dist/**",
@@ -29,7 +29,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@izumisy/react-preview": "workspace:*",
+    "@izumisy/vite-plugin-react-preview": "workspace:*",
     "@mdx-js/react": "^3.1.0",
     "@mdx-js/rollup": "^3.1.0",
     "@shikijs/langs": "^4.0.2",

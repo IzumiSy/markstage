@@ -126,7 +126,7 @@ if (themeParam === "dark" || themeParam === "light") {
   applyTheme(themeParam);
 }
 window.addEventListener("message", function(e) {
-  if (e.data && e.data.type === "markstage-theme" && (e.data.theme === "dark" || e.data.theme === "light")) {
+  if (e.data && e.data.type === "mrp-theme" && (e.data.theme === "dark" || e.data.theme === "light")) {
     applyTheme(e.data.theme);
   }
 });
@@ -147,7 +147,7 @@ registry[blockId]().then(function(mod) {
 
   new ResizeObserver(function() {
     window.parent.postMessage(
-      { type: "markstage-resize", blockId: blockId, height: root.scrollHeight },
+      { type: "mrp-resize", blockId: blockId, height: root.scrollHeight },
       "*"
     );
   }).observe(root);
@@ -286,7 +286,7 @@ export function createPreviewBuildPlugin(
   let standaloneChunkRefId: string | undefined;
 
   return {
-    name: "markstage-preview-build",
+    name: "mrp-preview-build",
 
     configResolved(config) {
       resolvedConfig = config;
@@ -301,7 +301,7 @@ export function createPreviewBuildPlugin(
       standaloneChunkRefId = this.emitFile({
         type: "chunk",
         id: STANDALONE_CLIENT_MODULE_ID,
-        name: "markstage-standalone-preview",
+        name: "mrp-standalone-preview",
       });
     },
 

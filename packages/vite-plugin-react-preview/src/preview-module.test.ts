@@ -52,9 +52,9 @@ describe("generatePreviewModuleCode", () => {
       "@tailor-platform/app-shell/styles",
     );
     expect(code).toContain(
-      'import __markstage_css from "@tailor-platform/app-shell/styles?inline"',
+      'import __mrp_css from "@tailor-platform/app-shell/styles?inline"',
     );
-    expect(code).toContain("export const css = __markstage_css");
+    expect(code).toContain("export const css = __mrp_css");
   });
 
   it("handles any CSS path with ?inline", () => {
@@ -64,9 +64,9 @@ describe("generatePreviewModuleCode", () => {
       "/abs/path/to/styles.css",
     );
     expect(code).toContain(
-      'import __markstage_css from "/abs/path/to/styles.css?inline"',
+      'import __mrp_css from "/abs/path/to/styles.css?inline"',
     );
-    expect(code).toContain("export const css = __markstage_css");
+    expect(code).toContain("export const css = __mrp_css");
   });
 });
 

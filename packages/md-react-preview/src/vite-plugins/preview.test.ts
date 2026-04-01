@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { previewPlugin, type PreviewPluginResult } from "./preview";
-import { simpleHash } from "@izumisy/react-preview";
+import { simpleHash } from "@izumisy/vite-plugin-react-preview";
 import type { Plugin } from "vite";
 
 let preview: PreviewPluginResult;
 
 function getTransformPlugin(): Plugin {
-  return preview.plugins.find((p) => p.name === "markstage-preview")!;
+  return preview.plugins.find((p) => p.name === "mrp-preview")!;
 }
 
 async function callTransform(code: string, id: string) {

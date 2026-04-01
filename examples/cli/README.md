@@ -1,6 +1,6 @@
 # example-cli
 
-Example project using the `@izumisy/markstage` CLI.
+Example project using the `@izumisy/md-react-preview` CLI.
 
 ## Commands
 

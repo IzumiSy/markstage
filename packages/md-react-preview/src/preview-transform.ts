@@ -1,4 +1,4 @@
-import { parseMeta } from "@izumisy/react-preview";
+import { parseMeta } from "@izumisy/vite-plugin-react-preview";
 
 const PREVIEW_FENCE_RE = /```tsx preview(.*?)\n([\s\S]*?)```/g;
 

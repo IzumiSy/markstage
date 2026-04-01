@@ -128,7 +128,7 @@ describe("createPreviewHooks", () => {
       expect(code).toContain("createRoot");
       expect(code).toContain("registry[blockId]");
       expect(code).toContain("ResizeObserver");
-      expect(code).toContain("markstage-resize");
+      expect(code).toContain("mrp-resize");
     });
 
     it("generates preview module code for a known blockId", () => {

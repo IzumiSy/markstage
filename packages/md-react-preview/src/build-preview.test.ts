@@ -4,7 +4,7 @@ import { rm } from "node:fs/promises";
 import fg from "fast-glob";
 import { runBuild, runPreview } from "./server";
 import { extractPreviewBlocks } from "./preview-transform";
-import { simpleHash } from "@izumisy/react-preview";
+import { simpleHash } from "@izumisy/vite-plugin-react-preview";
 import { readFile } from "node:fs/promises";
 import type { PreviewServer } from "vite";
 

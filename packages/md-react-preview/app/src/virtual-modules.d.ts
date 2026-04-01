@@ -16,7 +16,7 @@ declare module "virtual:previewer-entries" {
 
 declare module "virtual:previewer-css" {}
 
-declare module "virtual:markstage-preview-registry" {
+declare module "virtual:mrp-preview-registry" {
   export const registry: Record<
     string,
     () => Promise<{ default: import("react").FC; css: string }>

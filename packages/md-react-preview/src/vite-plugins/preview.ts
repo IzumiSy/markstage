@@ -8,7 +8,7 @@ import {
   resolveCssImportPath,
   VIRTUAL_PREFIX,
   REGISTRY_MODULE_ID,
-} from "@izumisy/react-preview";
+} from "@izumisy/vite-plugin-react-preview";
 
 export type PreviewPluginResult = {
   plugins: Plugin[];
@@ -35,13 +35,13 @@ export function previewPlugin(
   const cssImport = options?.css ? resolveCssImportPath(options.css, options.hostRoot) : undefined;
 
   // Reuse the base preview plugin for virtual modules + standalone server
-  const basePlugins = createBasePreviewPlugin("markstage-preview-base", {
+  const basePlugins = createBasePreviewPlugin("mrp-preview-base", {
     blockRegistry,
     cssImport,
   });
 
   const transformPlugin: Plugin = {
-    name: "markstage-preview",
+    name: "mrp-preview",
     enforce: "pre",
 
     async transform(code, id) {

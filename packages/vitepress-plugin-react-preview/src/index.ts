@@ -1,16 +1,16 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import type { Plugin } from "vite";
-import type { PreviewBlockEntry } from "@izumisy/react-preview";
+import type { PreviewBlockEntry } from "@izumisy/vite-plugin-react-preview";
 import {
   createBasePreviewPlugin,
   createPreviewBuildPlugin,
   simpleHash,
   parseMeta,
-} from "@izumisy/react-preview";
+} from "@izumisy/vite-plugin-react-preview";
 import { createMarkdownItPlugin } from "./markdown-it-plugin";
 
-export type MarkstageVitePressOptions = {
+export type MrpVitePressOptions = {
   /** CSS file to inject into preview blocks (e.g. your component library's stylesheet) */
   css?: string;
 };
@@ -71,13 +71,13 @@ export function scanMarkdownBlocks(
 }
 
 /**
- * Create a Markstage plugin instance for VitePress.
+ * Create a md-react-preview plugin instance for VitePress.
  *
  * Returns an object with:
  * - `markdownIt`: markdown-it plugin that transforms ` ```tsx preview ` fences
  * - `vite()`: Vite plugins that serve preview blocks with live React components
  */
-export function createMarkstagePlugin(options: MarkstageVitePressOptions = {}) {
+export function createMrpPlugin(options: MrpVitePressOptions = {}) {
   const blockRegistry = new Map<string, PreviewBlockEntry>();
 
   return {
@@ -92,7 +92,7 @@ export function createMarkstagePlugin(options: MarkstageVitePressOptions = {}) {
      */
     vite(): Plugin[] {
       return [
-        ...createBasePreviewPlugin("markstage-vitepress-preview", {
+        ...createBasePreviewPlugin("mrp-vitepress-preview", {
           blockRegistry,
           cssImport: options.css,
         }),

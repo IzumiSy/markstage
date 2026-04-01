@@ -7,7 +7,7 @@ Transforms `` ```tsx preview `` fenced blocks in Markdown into interactive previ
 ## Features
 
 - **markdown-it plugin** — rewrites `` ```tsx preview `` blocks into `<PreviewBlock>` Vue components at the Markdown parsing stage
-- **Vite plugin** — serves preview modules and standalone preview pages using `@izumisy/react-preview` under the hood
+- **Vite plugin** — serves preview modules and standalone preview pages using `@izumisy/vite-plugin-react-preview` under the hood
 - **Style isolation** — inline previews render inside iframes; standalone previews run in a separate page
 - **Dark mode** — syncs with VitePress theme toggle via `postMessage`
 - **Build support** — emits standalone HTML pages (`/__preview/{blockId}.html`) during `vitepress build`
@@ -24,20 +24,20 @@ In your VitePress config (`.vitepress/config.ts`):
 
 ```ts
 import { defineConfig } from "vitepress";
-import { createMarkstagePlugin } from "@izumisy/vitepress-plugin-react-preview";
+import { createMrpPlugin } from "@izumisy/vitepress-plugin-react-preview";
 
-const markstage = createMarkstagePlugin({
+const mrp = createMrpPlugin({
   css: "@my-lib/styles", // optional: CSS to inject into previews
 });
 
 export default defineConfig({
   markdown: {
     config(md) {
-      md.use(markstage.markdownIt);
+      md.use(mrp.markdownIt);
     },
   },
   vite: {
-    plugins: [markstage.vite()],
+    plugins: [mrp.vite()],
   },
 });
 ```
@@ -52,7 +52,7 @@ import PreviewBlock from "@izumisy/vitepress-plugin-react-preview/PreviewBlock.v
 
 ## Preview Syntax
 
-Works with the same `` ```tsx preview `` syntax as `@izumisy/markstage`:
+Works with the same `` ```tsx preview `` syntax as `@izumisy/md-react-preview`:
 
 ````md
 ```tsx preview

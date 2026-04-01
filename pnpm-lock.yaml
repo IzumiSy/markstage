@@ -41,9 +41,9 @@ importers:
 
   examples/cli:
     dependencies:
-      '@izumisy/markstage':
+      '@izumisy/md-react-preview':
         specifier: workspace:*
-        version: link:../../packages/markstage
+        version: link:../../packages/md-react-preview
       '@tailor-platform/app-shell':
         specifier: 'catalog:'
         version: 0.31.1(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
@@ -76,11 +76,11 @@ importers:
         specifier: ^3.5.13
         version: 3.5.31(typescript@5.9.3)
 
-  packages/markstage:
+  packages/md-react-preview:
     dependencies:
-      '@izumisy/react-preview':
+      '@izumisy/vite-plugin-react-preview':
         specifier: workspace:*
-        version: link:../react-preview
+        version: link:../vite-plugin-react-preview
       '@mdx-js/react':
         specifier: ^3.1.0
         version: 3.1.1(@types/react@19.2.14)(react@19.2.4)
@@ -152,7 +152,7 @@ importers:
         specifier: 'catalog:'
         version: 4.1.2(@types/node@22.19.15)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
 
-  packages/react-preview:
+  packages/vite-plugin-react-preview:
     dependencies:
       vite:
         specifier: 'catalog:'
@@ -173,9 +173,9 @@ importers:
 
   packages/vitepress-plugin-react-preview:
     dependencies:
-      '@izumisy/react-preview':
+      '@izumisy/vite-plugin-react-preview':
         specifier: workspace:*
-        version: link:../react-preview
+        version: link:../vite-plugin-react-preview
       react:
         specifier: '>=18'
         version: 19.2.4

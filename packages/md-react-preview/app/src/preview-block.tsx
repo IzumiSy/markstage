@@ -113,15 +113,12 @@ export function PreviewBlock({
   const initialColorScheme = useRef(colorScheme);
   useEffect(() => {
     if (colorScheme === initialColorScheme.current) return;
-    iframeRef.current?.contentWindow?.postMessage(
-      { type: "markstage-theme", theme: colorScheme },
-      "*",
-    );
+    iframeRef.current?.contentWindow?.postMessage({ type: "mrp-theme", theme: colorScheme }, "*");
   }, [colorScheme]);
 
   useEffect(() => {
     function onMessage(e: MessageEvent) {
-      if (e.data?.type === "markstage-resize" && e.data?.blockId === blockId) {
+      if (e.data?.type === "mrp-resize" && e.data?.blockId === blockId) {
         setIframeHeight(e.data.height);
       }
     }

@@ -3,7 +3,7 @@ import {
   simpleHash,
   parseMeta,
   type PreviewBlockEntry,
-} from "@izumisy/react-preview";
+} from "@izumisy/vite-plugin-react-preview";
 
 /**
  * Create a markdown-it plugin that transforms ` ```tsx preview ` fenced code blocks

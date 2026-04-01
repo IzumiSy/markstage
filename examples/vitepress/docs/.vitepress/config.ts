@@ -1,13 +1,13 @@
 import { defineConfig } from "vitepress";
-import { createMarkstagePlugin } from "@izumisy/vitepress-plugin-react-preview";
+import { createMrpPlugin } from "@izumisy/vitepress-plugin-react-preview";
 
-const markstage = createMarkstagePlugin({
+const mrp = createMrpPlugin({
   css: "@tailor-platform/app-shell/styles",
 });
 
 export default defineConfig({
   title: "VitePress Example",
-  description: "Example of using Markstage preview blocks in VitePress",
+  description: "Example of using md-react-preview blocks in VitePress",
 
   themeConfig: {
     sidebar: [
@@ -26,11 +26,11 @@ export default defineConfig({
 
   markdown: {
     config(md) {
-      md.use(markstage.markdownIt);
+      md.use(mrp.markdownIt);
     },
   },
 
   vite: {
-    plugins: [...markstage.vite()],
+    plugins: [...mrp.vite()],
   },
 });
