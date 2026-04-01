@@ -1,4 +1,4 @@
-# @izumisy/react-preview
+# @izumisy/vite-plugin-react-preview
 
 Low-level Vite plugin and utilities for rendering React component previews. This package is the shared engine used by both `@izumisy/markstage` (CLI) and `@izumisy/vitepress-plugin-react-preview` (VitePress integration).
 
@@ -8,11 +8,11 @@ Low-level Vite plugin and utilities for rendering React component previews. This
 - **Virtual module generation** — each preview block becomes a virtual Vite module (`virtual:markstage-preview-{blockId}`) containing the component code, CSS import, and a default export
 - **Standalone preview pages** — generates full-viewport HTML pages served at `/__preview/{blockId}` with theme support (`?theme=dark|light`)
 - **Block registry** — a shared `Map<string, PreviewBlockEntry>` that tracks discovered blocks and coordinates between the markdown parser and Vite plugin
-- **Browser-safe sub-path** — `@izumisy/react-preview/dom` exports constants without pulling in Node.js dependencies, safe for browser/Vue SFC imports
+- **Browser-safe sub-path** — `@izumisy/vite-plugin-react-preview/dom` exports constants without pulling in Node.js dependencies, safe for browser/Vue SFC imports
 
 ## Exports
 
-### `@izumisy/react-preview` (main)
+### `@izumisy/vite-plugin-react-preview` (main)
 
 | Export | Description |
 |--------|-------------|
@@ -25,7 +25,7 @@ Low-level Vite plugin and utilities for rendering React component previews. This
 | `simpleHash(str)` | MD5-based short hash for generating block IDs |
 | `resolveCssImportPath(css, hostRoot?)` | Resolves CSS import paths (package specifiers vs relative paths) |
 
-### `@izumisy/react-preview/dom` (browser-safe)
+### `@izumisy/vite-plugin-react-preview/dom` (browser-safe)
 
 | Export | Description |
 |--------|-------------|
@@ -42,7 +42,7 @@ This package is not typically used directly. It is consumed by:
 If you are building a custom integration, use `createBasePreviewPlugin()` with a block registry:
 
 ```ts
-import { createBasePreviewPlugin, type PreviewBlockEntry } from "@izumisy/react-preview";
+import { createBasePreviewPlugin, type PreviewBlockEntry } from "@izumisy/vite-plugin-react-preview";
 
 const blockRegistry = new Map<string, PreviewBlockEntry>();
 

@@ -21,7 +21,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@izumisy/react-preview": "workspace:*"
+    "@izumisy/vite-plugin-react-preview": "workspace:*"
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",

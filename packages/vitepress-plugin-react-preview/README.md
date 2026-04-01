@@ -7,7 +7,7 @@ Transforms `` ```tsx preview `` fenced blocks in Markdown into interactive previ
 ## Features
 
 - **markdown-it plugin** — rewrites `` ```tsx preview `` blocks into `<PreviewBlock>` Vue components at the Markdown parsing stage
-- **Vite plugin** — serves preview modules and standalone preview pages using `@izumisy/react-preview` under the hood
+- **Vite plugin** — serves preview modules and standalone preview pages using `@izumisy/vite-plugin-react-preview` under the hood
 - **Style isolation** — inline previews render inside iframes; standalone previews run in a separate page
 - **Dark mode** — syncs with VitePress theme toggle via `postMessage`
 - **Build support** — emits standalone HTML pages (`/__preview/{blockId}.html`) during `vitepress build`

@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import { resolveCssImportPath } from "@izumisy/react-preview";
+import { resolveCssImportPath } from "@izumisy/vite-plugin-react-preview";
 
 /**
  * Virtual module `virtual:previewer-css` — imports the host project's

@@ -1,5 +1,5 @@
 {
-  "name": "@izumisy/react-preview",
+  "name": "@izumisy/vite-plugin-react-preview",
   "version": "1.0.0",
   "description": "Vite plugin for rendering React component previews in iframe",
   "type": "module",

@@ -1,13 +1,13 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import type { Plugin } from "vite";
-import type { PreviewBlockEntry } from "@izumisy/react-preview";
+import type { PreviewBlockEntry } from "@izumisy/vite-plugin-react-preview";
 import {
   createBasePreviewPlugin,
   createPreviewBuildPlugin,
   simpleHash,
   parseMeta,
-} from "@izumisy/react-preview";
+} from "@izumisy/vite-plugin-react-preview";
 import { createMarkdownItPlugin } from "./markdown-it-plugin";
 
 export type MarkstageVitePressOptions = {

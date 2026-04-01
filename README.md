@@ -7,7 +7,7 @@ A lightweight toolkit for live-previewing React components directly from Markdow
 | Package | Description |
 |---------|-------------|
 | [`@izumisy/markstage`](packages/markstage/) | CLI & programmatic API — run a standalone preview server with `markstage dev` / `markstage build` |
-| [`@izumisy/react-preview`](packages/react-preview/) | Vite plugin & utilities — preview block parsing, iframe rendering, standalone preview page generation |
+| [`@izumisy/vite-plugin-react-preview`](packages/vite-plugin-react-preview/) | Vite plugin & utilities — preview block parsing, iframe rendering, standalone preview page generation |
 | [`@izumisy/vitepress-plugin-react-preview`](packages/vitepress-plugin-react-preview/) | VitePress plugin — live React component previews inside a VitePress site |
 
 ## Examples

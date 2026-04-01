@@ -29,7 +29,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@izumisy/react-preview": "workspace:*",
+    "@izumisy/vite-plugin-react-preview": "workspace:*",
     "@mdx-js/react": "^3.1.0",
     "@mdx-js/rollup": "^3.1.0",
     "@shikijs/langs": "^4.0.2",

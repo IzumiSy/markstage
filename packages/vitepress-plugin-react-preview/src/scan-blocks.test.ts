@@ -2,8 +2,8 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import type { PreviewBlockEntry } from "@izumisy/react-preview";
-import { simpleHash } from "@izumisy/react-preview";
+import type { PreviewBlockEntry } from "@izumisy/vite-plugin-react-preview";
+import { simpleHash } from "@izumisy/vite-plugin-react-preview";
 import { findMarkdownFiles, scanMarkdownBlocks } from "./index";
 
 const TMP_ROOT = join(tmpdir(), "markstage-test-" + Date.now());
