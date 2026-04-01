@@ -11,6 +11,7 @@ import {
   resolveCssImportPath,
   VIRTUAL_PREFIX,
   REGISTRY_MODULE_ID,
+  STANDALONE_CLIENT_MODULE_ID,
 } from "@izumisy/react-preview";
 
 export type PreviewPlugin = Plugin & {
@@ -137,9 +138,9 @@ export function previewPlugin(
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preview</title>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/standalone-preview.tsx"></script>
+  <body style="margin:0">
+    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px;background:#ffffff"></div>
+    <script type="module" src="/${STANDALONE_CLIENT_MODULE_ID}"></script>
   </body>
 </html>`;
 

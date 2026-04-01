@@ -7,6 +7,7 @@ export {
 export {
   VIRTUAL_PREFIX,
   REGISTRY_MODULE_ID,
+  STANDALONE_CLIENT_MODULE_ID,
   WRAP_STYLES,
   ALIGN_STYLES,
   generatePreviewModuleCode,
@@ -15,4 +16,5 @@ export {
   type PreviewPluginOptions,
   createPreviewHooks,
   createBasePreviewPlugin,
+  createPreviewBuildPlugin,
 } from "./preview-plugin";

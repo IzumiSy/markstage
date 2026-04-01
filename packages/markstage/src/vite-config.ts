@@ -10,7 +10,7 @@ import type { InlineConfig, Plugin, PluginOption } from "vite";
 import { previewPlugin } from "./vite-plugins/preview";
 import { previewerEntriesPlugin } from "./vite-plugins/entries";
 import { previewerCssPlugin } from "./vite-plugins/css";
-import { standalonePreviewPlugin } from "./vite-plugins/standalone-preview";
+import { createPreviewBuildPlugin } from "@izumisy/react-preview";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const APP_DIR = resolve(__dirname, "..", "app");
@@ -86,7 +86,7 @@ export function createPreviewerViteConfig(options: {
       ...(options.vite?.plugins ?? []),
       previewerEntriesPlugin(options.root, options.resolveFiles),
       previewerCssPlugin(options.root, options.css),
-      standalonePreviewPlugin(() => preview),
+      createPreviewBuildPlugin({ blockRegistry: preview.blockRegistry }),
     ],
   };
 }

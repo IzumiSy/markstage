@@ -1,12 +1,72 @@
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 import type { Plugin } from "vite";
 import type { PreviewBlockEntry } from "@izumisy/react-preview";
-import { createBasePreviewPlugin } from "@izumisy/react-preview";
+import {
+  createBasePreviewPlugin,
+  createPreviewBuildPlugin,
+  simpleHash,
+  parseMeta,
+} from "@izumisy/react-preview";
 import { createMarkdownItPlugin } from "./markdown-it-plugin";
 
 export type MarkstageVitePressOptions = {
   /** CSS file to inject into preview blocks (e.g. your component library's stylesheet) */
   css?: string;
 };
+
+/**
+ * Recursively find all .md files under a directory.
+ */
+function findMarkdownFiles(dir: string): string[] {
+  const results: string[] = [];
+  for (const entry of readdirSync(dir)) {
+    if (entry.startsWith(".") || entry === "node_modules") continue;
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) {
+      results.push(...findMarkdownFiles(full));
+    } else if (full.endsWith(".md")) {
+      results.push(full);
+    }
+  }
+  return results;
+}
+
+/**
+ * Pre-scan markdown files to populate the block registry before Rollup
+ * resolves the registry virtual module.
+ */
+function scanMarkdownBlocks(
+  root: string,
+  blockRegistry: Map<string, PreviewBlockEntry>,
+): void {
+  const mdFiles = findMarkdownFiles(root);
+  for (const file of mdFiles) {
+    const content = readFileSync(file, "utf-8");
+    const relativePath = relative(root, file);
+
+    // Match all fenced code blocks — count only ```tsx preview fences
+    let previewIdx = 0;
+    const fenceRe = /^(`{3,})\s*(\S.*?)?\n([\s\S]*?)^\1\s*$/gm;
+    let m: RegExpExecArray | null;
+    while ((m = fenceRe.exec(content)) !== null) {
+      const info = (m[2] || "").trim();
+      if (info.startsWith("tsx preview")) {
+        const code = m[3].replace(/\n$/, "");
+        const blockId = simpleHash(`${relativePath}:preview:${previewIdx}`);
+        previewIdx++;
+        const meta = parseMeta(info.slice("tsx preview".length));
+        blockRegistry.set(blockId, {
+          code,
+          sourceFile: "",
+          wrap: meta.wrap,
+          height: meta.height,
+          standalone: meta.standalone === "true",
+        });
+      }
+    }
+  }
+}
 
 /**
  * Create a Markstage plugin instance for VitePress.
@@ -29,10 +89,16 @@ export function createMarkstagePlugin(options: MarkstageVitePressOptions = {}) {
      * Vite plugins that provide virtual modules for preview blocks.
      */
     vite(): Plugin[] {
-      return createBasePreviewPlugin("markstage-vitepress-preview", {
-        blockRegistry,
-        cssImport: options.css,
-      });
+      return [
+        ...createBasePreviewPlugin("markstage-vitepress-preview", {
+          blockRegistry,
+          cssImport: options.css,
+        }),
+        createPreviewBuildPlugin({
+          blockRegistry,
+          scanBlocks: (root) => scanMarkdownBlocks(root, blockRegistry),
+        }),
+      ];
     },
   };
 }

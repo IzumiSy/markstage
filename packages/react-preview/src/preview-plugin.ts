@@ -1,10 +1,12 @@
-import type { Plugin, ViteDevServer } from "vite";
+import type { Plugin, ResolvedConfig, ViteDevServer } from "vite";
 import { transformWithEsbuild } from "vite";
 import type { PreviewBlockEntry } from "./preview-utils";
 import {
   VIRTUAL_PREFIX,
   REGISTRY_MODULE_ID,
   STANDALONE_CLIENT_MODULE_ID,
+  WRAP_STYLES,
+  ALIGN_STYLES,
   generatePreviewModuleCode,
 } from "./preview-module";
 
@@ -102,10 +104,10 @@ import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 import { registry } from ${JSON.stringify(REGISTRY_MODULE_ID)};
 
-var WRAP_STYLES = { row: "flex-wrap:wrap;gap:8px", column: "flex-direction:column;gap:8px" };
-var ALIGN_STYLES = { center: "justify-content:center;align-items:center", start: "justify-content:center;align-items:flex-start", end: "justify-content:center;align-items:flex-end" };
+var WRAP_STYLES = ${JSON.stringify(WRAP_STYLES)};
+var ALIGN_STYLES = ${JSON.stringify(ALIGN_STYLES)};
 
-var blockId = location.pathname.split("/").pop();
+var blockId = location.pathname.split("/").pop().replace(/\\.html$/, "");
 var params = new URLSearchParams(location.search);
 
 var themeParam = params.get("theme");
@@ -120,20 +122,21 @@ var root = document.getElementById("root");
 if (wrapParam && WRAP_STYLES[wrapParam]) root.style.cssText += ";" + WRAP_STYLES[wrapParam];
 if (alignParam && ALIGN_STYLES[alignParam]) root.style.cssText += ";" + ALIGN_STYLES[alignParam];
 
-var mod = await registry[blockId]();
-if (mod.css) {
-  var style = document.createElement("style");
-  style.textContent = mod.css;
-  document.head.appendChild(style);
-}
-createRoot(root).render(createElement(mod.default));
+registry[blockId]().then(function(mod) {
+  if (mod.css) {
+    var style = document.createElement("style");
+    style.textContent = mod.css;
+    document.head.appendChild(style);
+  }
+  createRoot(root).render(createElement(mod.default));
 
-new ResizeObserver(function() {
-  window.parent.postMessage(
-    { type: "markstage-resize", blockId: blockId, height: root.scrollHeight },
-    "*"
-  );
-}).observe(root);
+  new ResizeObserver(function() {
+    window.parent.postMessage(
+      { type: "markstage-resize", blockId: blockId, height: root.scrollHeight },
+      "*"
+    );
+  }).observe(root);
+});
 `;
 }
 
@@ -239,4 +242,82 @@ export function createBasePreviewPlugin(
       },
     } as Plugin,
   ];
+}
+
+export interface PreviewBuildPluginOptions {
+  blockRegistry: Map<string, PreviewBlockEntry>;
+  /**
+   * Called during `buildStart` to pre-populate the blockRegistry before
+   * Rollup loads any modules. This is critical for frameworks like VitePress
+   * where blocks are normally registered lazily during the transform phase
+   * — too late for the registry virtual module to include them.
+   */
+  scanBlocks?: (root: string) => void | Promise<void>;
+}
+
+/**
+ * Vite plugin that generates standalone preview HTML pages during build.
+ *
+ * Each preview block gets its own HTML page at `__preview/{blockId}.html`.
+ * Use alongside `createBasePreviewPlugin` for consumers like VitePress that
+ * need static preview pages in production.
+ */
+export function createPreviewBuildPlugin(
+  options: PreviewBuildPluginOptions,
+): Plugin {
+  const { blockRegistry } = options;
+  let resolvedConfig: ResolvedConfig;
+  let isSsrBuild = false;
+  let standaloneChunkRefId: string | undefined;
+
+  return {
+    name: "markstage-preview-build",
+
+    configResolved(config) {
+      resolvedConfig = config;
+      isSsrBuild = !!config.build?.ssr;
+    },
+
+    async buildStart() {
+      if (isSsrBuild || resolvedConfig.command === "serve") return;
+      if (options.scanBlocks) {
+        await options.scanBlocks(resolvedConfig.root);
+      }
+      standaloneChunkRefId = this.emitFile({
+        type: "chunk",
+        id: STANDALONE_CLIENT_MODULE_ID,
+        name: "markstage-standalone-preview",
+      });
+    },
+
+    async generateBundle(_options, _bundle) {
+      if (isSsrBuild || !standaloneChunkRefId) return;
+
+      const blockIds = [...blockRegistry.keys()];
+      if (blockIds.length === 0) return;
+
+      const standaloneFileName = this.getFileName(standaloneChunkRefId);
+
+      for (const blockId of blockIds) {
+        const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preview</title>
+  </head>
+  <body style="margin:0">
+    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px;background:#ffffff"></div>
+    <script type="module" src="/${standaloneFileName}"></script>
+  </body>
+</html>`;
+
+        this.emitFile({
+          type: "asset",
+          fileName: `__preview/${blockId}.html`,
+          source: html,
+        });
+      }
+    },
+  };
 }

@@ -33,7 +33,7 @@ export async function runBuild(opts: PreviewerRunOptions) {
     ...viteConfig,
     build: {
       ...viteConfig.build,
-      outDir: resolve(opts.cwd, "dist-preview"),
+      outDir: resolve(opts.cwd, "dist"),
     },
   });
 }
@@ -44,7 +44,7 @@ export async function runPreview(opts: PreviewerRunOptions) {
     ...viteConfig,
     build: {
       ...viteConfig.build,
-      outDir: resolve(opts.cwd, "dist-preview"),
+      outDir: resolve(opts.cwd, "dist"),
     },
   });
   server.printUrls();
