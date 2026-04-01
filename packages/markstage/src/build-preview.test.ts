@@ -20,8 +20,7 @@ describe("build + preview integration", () => {
     // Clean previous build
     await rm(DIST_DIR, { recursive: true, force: true });
 
-    const resolveFiles = () =>
-      fg("docs/**/*.md", { cwd: FIXTURE_DIR, absolute: true });
+    const resolveFiles = () => fg("docs/**/*.md", { cwd: FIXTURE_DIR, absolute: true });
 
     const opts = {
       cwd: FIXTURE_DIR,
@@ -64,9 +63,7 @@ describe("build + preview integration", () => {
   it("every __preview/{blockId} page returns 200", async () => {
     for (const blockId of expectedBlockIds) {
       const res = await fetch(`${baseUrl}/__preview/${blockId}`);
-      expect(res.status, `__preview/${blockId} returned ${res.status}`).toBe(
-        200,
-      );
+      expect(res.status, `__preview/${blockId} returned ${res.status}`).toBe(200);
     }
   });
 
@@ -77,10 +74,7 @@ describe("build + preview integration", () => {
 
       // Extract the script src from the HTML
       const match = html.match(/src="([^"]+\.js)"/);
-      expect(
-        match,
-        `__preview/${blockId} should have a script src`,
-      ).toBeTruthy();
+      expect(match, `__preview/${blockId} should have a script src`).toBeTruthy();
 
       const scriptUrl = new URL(match![1], baseUrl).href;
       const scriptRes = await fetch(scriptUrl);
@@ -100,10 +94,7 @@ describe("build + preview integration", () => {
     const js = await scriptRes.text();
 
     for (const blockId of expectedBlockIds) {
-      expect(
-        js,
-        `Standalone JS should contain registry entry for ${blockId}`,
-      ).toContain(blockId);
+      expect(js, `Standalone JS should contain registry entry for ${blockId}`).toContain(blockId);
     }
   });
 });
