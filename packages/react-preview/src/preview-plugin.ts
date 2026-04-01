@@ -118,6 +118,9 @@ function applyTheme(theme) {
   document.documentElement.classList.remove("light", "dark");
   document.documentElement.classList.add(theme);
   document.documentElement.style.colorScheme = theme;
+  var bg = theme === "dark" ? "#1a1a1a" : "#fff";
+  document.documentElement.style.backgroundColor = bg;
+  document.body.style.backgroundColor = bg;
 }
 if (themeParam === "dark" || themeParam === "light") {
   applyTheme(themeParam);

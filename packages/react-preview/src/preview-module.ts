@@ -30,6 +30,7 @@ export function generateStandaloneHtml(scriptSrc: string): string {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preview</title>
+    <style>html,body{background-color:#fff}html.dark,html.dark body{background-color:#1a1a1a}</style>
     <script>!function(){var t=new URLSearchParams(location.search).get("theme");if(t==="dark"||t==="light"){document.documentElement.style.colorScheme=t;document.documentElement.setAttribute("data-theme",t);document.documentElement.classList.add(t)}}()</script>
   </head>
   <body style="margin:0">
