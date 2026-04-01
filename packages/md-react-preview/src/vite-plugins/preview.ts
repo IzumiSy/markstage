@@ -1,5 +1,9 @@
 import type { Plugin, ViteDevServer } from "vite";
-import { extractPreviewBlocks, escapeJsString, hasPreviewBlocks } from "../preview-transform";
+import {
+  extractPreviewBlocks,
+  escapeJsString,
+  hasPreviewBlocks,
+} from "../preview-transform";
 import {
   simpleHash,
   type PreviewBlockEntry,
@@ -32,16 +36,18 @@ export function previewPlugin(
   let devServer: ViteDevServer | null = null;
 
   // Resolve CSS path for iframe injection
-  const cssImport = options?.css ? resolveCssImportPath(options.css, options.hostRoot) : undefined;
+  const cssImport = options?.css
+    ? resolveCssImportPath(options.css, options.hostRoot)
+    : undefined;
 
   // Reuse the base preview plugin for virtual modules + standalone server
-  const basePlugins = createBasePreviewPlugin("markstage-preview-base", {
+  const basePlugins = createBasePreviewPlugin("mrp-preview-base", {
     blockRegistry,
     cssImport,
   });
 
   const transformPlugin: Plugin = {
-    name: "markstage-preview",
+    name: "mrp-preview",
     enforce: "pre",
 
     async transform(code, id) {
@@ -69,13 +75,21 @@ export function previewPlugin(
             standalone: isStandalone,
           });
 
-          const heightProp = block.meta.height ? ` height={"${block.meta.height}"}` : "";
-          const wrapProp = block.meta.wrap ? ` wrap={"${block.meta.wrap}"}` : "";
-          const alignProp = block.meta.align ? ` align={"${block.meta.align}"}` : "";
+          const heightProp = block.meta.height
+            ? ` height={"${block.meta.height}"}`
+            : "";
+          const wrapProp = block.meta.wrap
+            ? ` wrap={"${block.meta.wrap}"}`
+            : "";
+          const alignProp = block.meta.align
+            ? ` align={"${block.meta.align}"}`
+            : "";
           const standaloneProp = isStandalone ? ` standalone={true}` : "";
           const replacement = `<PreviewBlock code={"${escaped}"} blockId={"${blockId}"}${heightProp}${wrapProp}${alignProp}${standaloneProp} />`;
           transformed =
-            transformed.slice(0, block.start) + replacement + transformed.slice(block.end);
+            transformed.slice(0, block.start) +
+            replacement +
+            transformed.slice(block.end);
         }
       }
 
@@ -92,7 +106,9 @@ export function previewPlugin(
           }
         }
         // Also invalidate the registry so new/removed blocks are picked up
-        const registryMod = devServer.moduleGraph.getModuleById("\0" + REGISTRY_MODULE_ID);
+        const registryMod = devServer.moduleGraph.getModuleById(
+          "\0" + REGISTRY_MODULE_ID,
+        );
         if (registryMod) {
           devServer.moduleGraph.invalidateModule(registryMod);
         }

@@ -6,7 +6,7 @@ import type { PreviewBlockEntry } from "@izumisy/vite-plugin-react-preview";
 import { simpleHash } from "@izumisy/vite-plugin-react-preview";
 import { findMarkdownFiles, scanMarkdownBlocks } from "./index";
 
-const TMP_ROOT = join(tmpdir(), "markstage-test-" + Date.now());
+const TMP_ROOT = join(tmpdir(), "mrp-test-" + Date.now());
 
 beforeAll(() => {
   mkdirSync(join(TMP_ROOT, "docs", "nested"), { recursive: true });

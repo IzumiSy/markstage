@@ -99,7 +99,9 @@ export function PreviewBlock({
 }) {
   const DEFAULT_HEIGHT = 200;
   const [open, setOpen] = useState(true);
-  const [iframeHeight, setIframeHeight] = useState(height ? Number(height) : DEFAULT_HEIGHT);
+  const [iframeHeight, setIframeHeight] = useState(
+    height ? Number(height) : DEFAULT_HEIGHT,
+  );
   const { colorScheme } = useTheme();
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -114,14 +116,14 @@ export function PreviewBlock({
   useEffect(() => {
     if (colorScheme === initialColorScheme.current) return;
     iframeRef.current?.contentWindow?.postMessage(
-      { type: "markstage-theme", theme: colorScheme },
+      { type: "mrp-theme", theme: colorScheme },
       "*",
     );
   }, [colorScheme]);
 
   useEffect(() => {
     function onMessage(e: MessageEvent) {
-      if (e.data?.type === "markstage-resize" && e.data?.blockId === blockId) {
+      if (e.data?.type === "mrp-resize" && e.data?.blockId === blockId) {
         setIframeHeight(e.data.height);
       }
     }
@@ -214,7 +216,11 @@ export function PreviewBlock({
           />
         </div>
       )}
-      <CodeSection code={code} open={open} onToggle={() => setOpen((v) => !v)} />
+      <CodeSection
+        code={code}
+        open={open}
+        onToggle={() => setOpen((v) => !v)}
+      />
     </div>
   );
 }

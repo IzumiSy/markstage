@@ -3,12 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "markstage dev",
-    "build": "markstage build",
-    "preview": "markstage preview"
+    "dev": "mrp dev",
+    "build": "mrp build",
+    "preview": "mrp preview"
   },
   "dependencies": {
-    "@izumisy/markstage": "workspace:*",
+    "@izumisy/md-react-preview": "workspace:*",
     "@tailor-platform/app-shell": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"

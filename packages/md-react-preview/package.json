@@ -1,9 +1,9 @@
 {
-  "name": "@izumisy/markstage",
+  "name": "@izumisy/md-react-preview",
   "version": "1.0.0",
-  "description": "Markstage — component previewer powered by MDX",
+  "description": "md-react-preview — component previewer powered by MDX",
   "bin": {
-    "markstage": "./dist/cli.mjs"
+    "mrp": "./dist/cli.mjs"
   },
   "files": [
     "dist/**",

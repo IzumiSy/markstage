@@ -1,21 +1,21 @@
-# @izumisy/markstage
+# @izumisy/md-react-preview
 
-CLI and programmatic API for Markstage — a zero-config component previewer for React projects.
+CLI and programmatic API for md-react-preview — a zero-config component previewer for React projects.
 
 Drop Markdown files into `docs/` with `` ```tsx preview `` fenced blocks and get a Vite-powered dev server with live component previews and syntax-highlighted source code.
 
 ## Install
 
 ```bash
-pnpm add -D @izumisy/markstage
+pnpm add -D @izumisy/md-react-preview
 ```
 
 ## CLI
 
 ```bash
-npx markstage dev       # Start dev server (default port 3040)
-npx markstage build     # Build static output
-npx markstage preview   # Preview the production build locally
+npx mrp dev       # Start dev server (default port 3040)
+npx mrp build     # Build static output
+npx mrp preview   # Preview the production build locally
 ```
 
 ## Writing Previews
@@ -77,7 +77,7 @@ Options can be set as `key="value"` pairs or boolean flags in the fence meta:
 Create a `previewer.config.ts` at your project root:
 
 ```ts
-import { defineConfig } from "@izumisy/markstage";
+import { defineConfig } from "@izumisy/md-react-preview";
 
 export default defineConfig({
   title: "My Component Library",
@@ -99,7 +99,7 @@ export default defineConfig({
 ## Programmatic API
 
 ```ts
-import { startDev, runBuild, defineConfig, createPreviewerViteConfig } from "@izumisy/markstage";
+import { startDev, runBuild, defineConfig, createPreviewerViteConfig } from "@izumisy/md-react-preview";
 ```
 
 | Export | Description |

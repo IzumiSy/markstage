@@ -1,5 +1,5 @@
 {
-  "name": "markstage",
+  "name": "md-react-preview",
   "private": true,
   "packageManager": "pnpm@10.24.0",
   "engines": {

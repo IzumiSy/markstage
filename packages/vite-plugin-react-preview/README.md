@@ -1,11 +1,11 @@
 # @izumisy/vite-plugin-react-preview
 
-Low-level Vite plugin and utilities for rendering React component previews. This package is the shared engine used by both `@izumisy/markstage` (CLI) and `@izumisy/vitepress-plugin-react-preview` (VitePress integration).
+Low-level Vite plugin and utilities for rendering React component previews. This package is the shared engine used by both `@izumisy/md-react-preview` (CLI) and `@izumisy/vitepress-plugin-react-preview` (VitePress integration).
 
 ## Features
 
 - **Preview block parsing** — `parseMeta()` extracts options (`wrap`, `height`, `standalone`, …) from fenced code block meta strings
-- **Virtual module generation** — each preview block becomes a virtual Vite module (`virtual:markstage-preview-{blockId}`) containing the component code, CSS import, and a default export
+- **Virtual module generation** — each preview block becomes a virtual Vite module (`virtual:mrp-preview-{blockId}`) containing the component code, CSS import, and a default export
 - **Standalone preview pages** — generates full-viewport HTML pages served at `/__preview/{blockId}` with theme support (`?theme=dark|light`)
 - **Block registry** — a shared `Map<string, PreviewBlockEntry>` that tracks discovered blocks and coordinates between the markdown parser and Vite plugin
 - **Browser-safe sub-path** — `@izumisy/vite-plugin-react-preview/dom` exports constants without pulling in Node.js dependencies, safe for browser/Vue SFC imports
@@ -36,7 +36,7 @@ Low-level Vite plugin and utilities for rendering React component previews. This
 
 This package is not typically used directly. It is consumed by:
 
-- **`@izumisy/markstage`** — uses `createBasePreviewPlugin` and `createPreviewBuildPlugin` to power the CLI preview server
+- **`@izumisy/md-react-preview`** — uses `createBasePreviewPlugin` and `createPreviewBuildPlugin` to power the CLI preview server
 - **`@izumisy/vitepress-plugin-react-preview`** — uses the same plugins to integrate previews into VitePress
 
 If you are building a custom integration, use `createBasePreviewPlugin()` with a block registry:

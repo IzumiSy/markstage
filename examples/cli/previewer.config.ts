@@ -1,4 +1,4 @@
-import { defineConfig } from "@izumisy/markstage";
+import { defineConfig } from "@izumisy/md-react-preview";
 
 export default defineConfig({
   title: "AppShell docs",

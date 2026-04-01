@@ -24,20 +24,20 @@ In your VitePress config (`.vitepress/config.ts`):
 
 ```ts
 import { defineConfig } from "vitepress";
-import { createMarkstagePlugin } from "@izumisy/vitepress-plugin-react-preview";
+import { createMrpPlugin } from "@izumisy/vitepress-plugin-react-preview";
 
-const markstage = createMarkstagePlugin({
+const mrp = createMrpPlugin({
   css: "@my-lib/styles", // optional: CSS to inject into previews
 });
 
 export default defineConfig({
   markdown: {
     config(md) {
-      md.use(markstage.markdownIt);
+      md.use(mrp.markdownIt);
     },
   },
   vite: {
-    plugins: [markstage.vite()],
+    plugins: [mrp.vite()],
   },
 });
 ```
@@ -52,7 +52,7 @@ import PreviewBlock from "@izumisy/vitepress-plugin-react-preview/PreviewBlock.v
 
 ## Preview Syntax
 
-Works with the same `` ```tsx preview `` syntax as `@izumisy/markstage`:
+Works with the same `` ```tsx preview `` syntax as `@izumisy/md-react-preview`:
 
 ````md
 ```tsx preview
