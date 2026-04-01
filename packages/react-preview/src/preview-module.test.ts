@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { generatePreviewModuleCode } from "./preview-module";
+import {
+  generatePreviewModuleCode,
+  generateStandaloneHtml,
+} from "./preview-module";
 
 describe("generatePreviewModuleCode", () => {
   it("exports a default Preview component", () => {
@@ -64,5 +67,31 @@ describe("generatePreviewModuleCode", () => {
       'import __markstage_css from "/abs/path/to/styles.css?inline"',
     );
     expect(code).toContain("export const css = __markstage_css");
+  });
+});
+
+describe("generateStandaloneHtml", () => {
+  it("produces valid HTML with doctype", () => {
+    const html = generateStandaloneHtml("assets/client.js");
+    expect(html).toMatch(/^<!doctype html>/);
+    expect(html).toContain("</html>");
+  });
+
+  it("includes a script tag with the given src", () => {
+    const html = generateStandaloneHtml("assets/standalone-abc123.js");
+    expect(html).toContain(
+      '<script type="module" src="/assets/standalone-abc123.js"></script>',
+    );
+  });
+
+  it("includes the #root container div", () => {
+    const html = generateStandaloneHtml("client.js");
+    expect(html).toContain('id="root"');
+  });
+
+  it("includes an inline theme initialization script", () => {
+    const html = generateStandaloneHtml("client.js");
+    expect(html).toContain("data-theme");
+    expect(html).toContain("colorScheme");
   });
 });

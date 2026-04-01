@@ -9,7 +9,7 @@ AppShell の Layout コンポーネントのプレビュー例です。全画面
 
 ## 2 Columns
 
-```tsx preview standalone
+```tsx preview standalone align="start"
 import { Layout, Button } from "@tailor-platform/app-shell"
 
 <Layout>
@@ -37,7 +37,7 @@ import { Layout, Button } from "@tailor-platform/app-shell"
 
 ## 3 Columns
 
-```tsx preview standalone
+```tsx preview standalone align="start"
 import { Layout } from "@tailor-platform/app-shell"
 
 <Layout>

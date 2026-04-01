@@ -16,6 +16,7 @@ export default defineConfig({
         items: [
           { text: "Button", link: "/examples/button" },
           { text: "Combobox", link: "/examples/combobox" },
+          { text: "Layout", link: "/examples/layout" },
           { text: "Sheet", link: "/examples/sheet" },
           { text: "Table", link: "/examples/table" },
         ],

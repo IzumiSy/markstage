@@ -17,8 +17,9 @@ export type MarkstageVitePressOptions = {
 
 /**
  * Recursively find all .md files under a directory.
+ * @internal Exported for testing.
  */
-function findMarkdownFiles(dir: string): string[] {
+export function findMarkdownFiles(dir: string): string[] {
   const results: string[] = [];
   for (const entry of readdirSync(dir)) {
     if (entry.startsWith(".") || entry === "node_modules") continue;
@@ -35,8 +36,9 @@ function findMarkdownFiles(dir: string): string[] {
 /**
  * Pre-scan markdown files to populate the block registry before Rollup
  * resolves the registry virtual module.
+ * @internal Exported for testing.
  */
-function scanMarkdownBlocks(
+export function scanMarkdownBlocks(
   root: string,
   blockRegistry: Map<string, PreviewBlockEntry>,
 ): void {
