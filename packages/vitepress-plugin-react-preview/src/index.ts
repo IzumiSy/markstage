@@ -45,16 +45,16 @@ function scanMarkdownBlocks(
     const content = readFileSync(file, "utf-8");
     const relativePath = relative(root, file);
 
-    // Match all fenced code blocks — count only ```tsx preview fences
-    let previewIdx = 0;
+    // Match all fenced code blocks — use source line number for blockId
     const fenceRe = /^(`{3,})\s*(\S.*?)?\n([\s\S]*?)^\1\s*$/gm;
     let m: RegExpExecArray | null;
     while ((m = fenceRe.exec(content)) !== null) {
       const info = (m[2] || "").trim();
       if (info.startsWith("tsx preview")) {
         const code = m[3].replace(/\n$/, "");
-        const blockId = simpleHash(`${relativePath}:preview:${previewIdx}`);
-        previewIdx++;
+        // Compute 0-based line number from the match offset
+        const line = content.slice(0, m.index).split("\n").length - 1;
+        const blockId = simpleHash(`${relativePath}:${line}`);
         const meta = parseMeta(info.slice("tsx preview".length));
         blockRegistry.set(blockId, {
           code,

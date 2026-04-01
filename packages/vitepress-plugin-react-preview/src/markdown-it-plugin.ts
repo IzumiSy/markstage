@@ -19,7 +19,6 @@ export function createMarkdownItPlugin(
 ) {
   return function markdownItPreviewPlugin(md: MarkdownIt): void {
     const defaultFence = md.renderer.rules.fence!;
-    const pageCounters = new Map<string, number>();
 
     md.renderer.rules.fence = (tokens, idx, options, env, self) => {
       const token = tokens[idx];
@@ -30,9 +29,10 @@ export function createMarkdownItPlugin(
         const encodedCode = Buffer.from(code).toString("base64");
 
         const pageId = env.relativePath || "unknown";
-        const previewIdx = pageCounters.get(pageId) ?? 0;
-        pageCounters.set(pageId, previewIdx + 1);
-        const blockId = simpleHash(`${pageId}:preview:${previewIdx}`);
+        // Use the source line number from the token for a stable,
+        // parser-independent block identifier.
+        const line = token.map?.[0] ?? 0;
+        const blockId = simpleHash(`${pageId}:${line}`);
 
         const meta = parseMeta(info.slice("tsx preview".length));
 

@@ -44,17 +44,18 @@ export function createPreviewHooks(options: PreviewPluginOptions) {
       }
     }
 
-    if (id === REGISTRY_MODULE_ID) {
+    // Strip leading "/" so URL requests (e.g. from <script src="/virtual:...">)
+    // match the same way as JS imports.
+    const cleanId = id.startsWith("/") ? id.slice(1) : id;
+
+    if (cleanId === REGISTRY_MODULE_ID) {
       return RESOLVED_REGISTRY_ID;
     }
 
-    if (id === STANDALONE_CLIENT_MODULE_ID) {
+    if (cleanId === STANDALONE_CLIENT_MODULE_ID) {
       return RESOLVED_STANDALONE_CLIENT_ID;
     }
 
-    // Handle both "virtual:markstage-preview-xxx" (from JS imports) and
-    // "/virtual:markstage-preview-xxx" (from URL requests)
-    const cleanId = id.startsWith("/") ? id.slice(1) : id;
     if (cleanId.startsWith(VIRTUAL_PREFIX)) {
       return "\0" + cleanId + ".tsx";
     }
@@ -192,6 +193,15 @@ export function createBasePreviewPlugin(
         server.middlewares.use((req, res, next) => {
           const match = req.url?.match(/^\/__preview\/([a-f0-9]+)(\?.*)?$/);
           if (!match) return next();
+
+          // Invalidate the cached registry so it reflects the latest
+          // blockRegistry contents (blocks may have been registered lazily
+          // by a markdown-it plugin after the module was first loaded).
+          const registryMod =
+            server.moduleGraph.getModuleById(RESOLVED_REGISTRY_ID);
+          if (registryMod) {
+            server.moduleGraph.invalidateModule(registryMod);
+          }
 
           server
             .transformIndexHtml(req.url!, standaloneHtml)
