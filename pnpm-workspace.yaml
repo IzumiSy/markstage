@@ -1,2 +1,13 @@
 packages:
   - "packages/*"
+  - "examples/*"
+
+catalog:
+  "@types/node": "^22"
+  "@tailor-platform/app-shell": "^0.31.1"
+  react: "^19.2.4"
+  react-dom: "^19.2.4"
+  tsdown: "^0.21.3"
+  typescript: "~5.9.3"
+  vite: "^6.3.5"
+  vitest: "^4.1.2"

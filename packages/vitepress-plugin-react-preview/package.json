@@ -1,0 +1,42 @@
+{
+  "name": "@izumisy/vitepress-plugin-react-preview",
+  "version": "1.0.0",
+  "description": "VitePress plugin for rendering React component previews via shadow DOM",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./PreviewBlock.vue": "./src/PreviewBlock.vue"
+  },
+  "files": [
+    "dist/**",
+    "src/PreviewBlock.vue"
+  ],
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "type-check": "tsc --incremental",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@izumisy/react-preview": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "catalog:",
+    "markdown-it": "^14.1.0",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "markdown-it": ">=14",
+    "react": ">=18",
+    "react-dom": ">=18",
+    "vite": ">=6",
+    "vue": ">=3"
+  }
+}

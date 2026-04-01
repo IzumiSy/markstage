@@ -2,9 +2,12 @@
   "name": "markstage",
   "private": true,
   "packageManager": "pnpm@10.24.0",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo watch dev --filter='./examples/*'",
     "lint": "turbo run lint",
     "fmt": "turbo run fmt",
     "fmt:check": "turbo run fmt:check",

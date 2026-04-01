@@ -1,0 +1,16 @@
+{
+  "name": "example-cli",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "markstage dev",
+    "build": "markstage build",
+    "preview": "markstage preview"
+  },
+  "dependencies": {
+    "@izumisy/markstage": "workspace:*",
+    "@tailor-platform/app-shell": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  }
+}
