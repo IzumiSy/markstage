@@ -1,6 +1,10 @@
 # md-react-preview
 
+[![CI](https://github.com/IzumiSy/markstage/actions/workflows/ci.yml/badge.svg)](https://github.com/IzumiSy/markstage/actions/workflows/ci.yml)
+
 A lightweight toolkit for live-previewing React components directly from Markdown. Write ` ```tsx preview ` fenced blocks and get instant rendered output — powered by Vite.
+
+![screenshot](.github/assets/screenshot.png)
 
 ## Packages
 
