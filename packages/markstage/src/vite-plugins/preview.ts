@@ -8,6 +8,7 @@ import {
   simpleHash,
   type PreviewBlockEntry,
   createBasePreviewPlugin,
+  createPreviewBuildPlugin,
   resolveCssImportPath,
   VIRTUAL_PREFIX,
   REGISTRY_MODULE_ID,
@@ -119,33 +120,35 @@ export function previewPlugin(
     configureServer(server: ViteDevServer) {
       devServer = server;
     },
-
-    // Build mode: scan preview files upfront to populate the block registry
-    // before the registry virtual module is loaded.
-    async buildStart() {
-      const { readFile } = await import("node:fs/promises");
-      const files = await resolveFiles();
-
-      for (const file of files) {
-        const content = await readFile(file, "utf-8");
-        const blocks = extractPreviewBlocks(content);
-        if (blocks.length === 0) continue;
-
-        for (let i = 0; i < blocks.length; i++) {
-          const blockId = simpleHash(`${file}:${i}`);
-          blockRegistry.set(blockId, {
-            code: blocks[i].code,
-            sourceFile: file,
-            wrap: blocks[i].meta.wrap,
-            height: blocks[i].meta.height,
-          });
-        }
-      }
-    },
   };
 
+  async function scanBlocks() {
+    const { readFile } = await import("node:fs/promises");
+    const files = await resolveFiles();
+
+    for (const file of files) {
+      const content = await readFile(file, "utf-8");
+      const blocks = extractPreviewBlocks(content);
+      if (blocks.length === 0) continue;
+
+      for (let i = 0; i < blocks.length; i++) {
+        const blockId = simpleHash(`${file}:${i}`);
+        blockRegistry.set(blockId, {
+          code: blocks[i].code,
+          sourceFile: file,
+          wrap: blocks[i].meta.wrap,
+          height: blocks[i].meta.height,
+        });
+      }
+    }
+  }
+
   return {
-    plugins: [transformPlugin, ...basePlugins],
+    plugins: [
+      transformPlugin,
+      ...basePlugins,
+      createPreviewBuildPlugin({ blockRegistry, scanBlocks }),
+    ],
     blockRegistry,
   };
 }

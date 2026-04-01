@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "markstage dev",
-    "build": "markstage build"
+    "build": "markstage build",
+    "preview": "markstage preview"
   },
   "dependencies": {
     "@izumisy/markstage": "workspace:*",

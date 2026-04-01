@@ -1,6 +1,6 @@
 import { defineConfig } from "@izumisy/markstage";
 
 export default defineConfig({
-  title: "CLI Example",
+  title: "AppShell docs",
   css: "@tailor-platform/app-shell/styles",
 });
