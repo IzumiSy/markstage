@@ -9,7 +9,6 @@ export {
   REGISTRY_MODULE_ID,
   WRAP_STYLES,
   ALIGN_STYLES,
-  adaptCssForShadowDom,
   generatePreviewModuleCode,
 } from "./preview-module";
 export {

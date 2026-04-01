@@ -9,7 +9,7 @@ export type PreviewerRepo = {
 
 export type PreviewerConfig = {
   title: string;
-  /** Glob pattern for preview MDX files (default: "src/**\/*.preview.mdx") */
+  /** Glob pattern for preview markdown files (default: "docs/**\/*.md") */
   glob?: string;
   /** CSS file to import in the previewer app (e.g. "./src/globals.css") */
   css?: string;
@@ -21,6 +21,8 @@ export type PreviewerConfig = {
     plugins?: PluginOption[];
   };
 };
+
+export const DEFAULT_GLOB = "docs/**/*.md";
 
 export function defineConfig(config: PreviewerConfig): PreviewerConfig {
   return config;

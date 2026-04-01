@@ -10,6 +10,7 @@ import type { InlineConfig, Plugin, PluginOption } from "vite";
 import { previewPlugin } from "./vite-plugins/preview";
 import { previewerEntriesPlugin } from "./vite-plugins/entries";
 import { previewerCssPlugin } from "./vite-plugins/css";
+import { standalonePreviewPlugin } from "./vite-plugins/standalone-preview";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const APP_DIR = resolve(__dirname, "..", "app");
@@ -32,6 +33,11 @@ export function createPreviewerViteConfig(options: {
     plugins?: PluginOption[];
   };
 }): InlineConfig {
+  const preview = previewPlugin(options.resolveFiles, {
+    css: options.css,
+    hostRoot: options.root,
+  });
+
   return {
     configFile: false,
     // Use the previewer's own app/ directory as Vite root so that
@@ -61,10 +67,7 @@ export function createPreviewerViteConfig(options: {
       },
     },
     plugins: [
-      previewPlugin(options.resolveFiles, {
-        css: options.css,
-        hostRoot: options.root,
-      }),
+      preview,
       {
         enforce: "pre",
         ...mdx({
@@ -74,12 +77,16 @@ export function createPreviewerViteConfig(options: {
             [remarkMdxFrontmatter, { name: "frontmatter" }],
           ],
           providerImportSource: "@mdx-js/react",
+          format: "mdx",
+          mdxExtensions: [".mdx", ".md"],
+          include: /\.(md|mdx)$/,
         }),
       } as Plugin,
       react({ include: /\.(jsx|tsx)$/ }),
       ...(options.vite?.plugins ?? []),
       previewerEntriesPlugin(options.root, options.resolveFiles),
       previewerCssPlugin(options.root, options.css),
+      standalonePreviewPlugin(() => preview),
     ],
   };
 }

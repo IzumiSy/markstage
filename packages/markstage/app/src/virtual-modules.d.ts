@@ -3,14 +3,6 @@ declare module "virtual:previewer-entries" {
   interface PreviewEntryFrontmatter {
     title?: string;
     description?: string;
-    sidebar?: {
-      group?: string;
-      order?: number;
-    };
-    status?: "stable" | "beta" | "experimental" | "deprecated";
-    hidden?: boolean;
-    /** Relative path from the repository root to the source code. Used for "View code" link. */
-    filePath?: string;
   }
   interface PreviewEntry {
     name: string;

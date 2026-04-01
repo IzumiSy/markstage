@@ -56,7 +56,7 @@ export function previewPlugin(
       const virtualResult = await hooks.transform(code, id);
       if (virtualResult) return virtualResult;
 
-      if (!id.endsWith(".preview.mdx")) return;
+      if (!id.endsWith(".md")) return;
 
       // Transform ```tsx preview blocks in MDX source into <PreviewBlock> components
       let transformed: string | undefined;
@@ -69,12 +69,15 @@ export function previewPlugin(
           const blockId = simpleHash(`${id}:${i}`);
           const escaped = escapeJsString(block.code);
 
+          const isStandalone = block.meta.standalone === "true";
+
           // Register block for virtual module resolution
           blockRegistry.set(blockId, {
             code: block.code,
             sourceFile: id,
             wrap: block.meta.wrap,
             height: block.meta.height,
+            standalone: isStandalone,
           });
 
           const heightProp = block.meta.height
@@ -86,7 +89,8 @@ export function previewPlugin(
           const alignProp = block.meta.align
             ? ` align={"${block.meta.align}"}`
             : "";
-          const replacement = `<PreviewBlock code={"${escaped}"} blockId={"${blockId}"}${heightProp}${wrapProp}${alignProp} />`;
+          const standaloneProp = isStandalone ? ` standalone={true}` : "";
+          const replacement = `<PreviewBlock code={"${escaped}"} blockId={"${blockId}"}${heightProp}${wrapProp}${alignProp}${standaloneProp} />`;
           transformed =
             transformed.slice(0, block.start) +
             replacement +
@@ -120,6 +124,33 @@ export function previewPlugin(
 
     configureServer(server: ViteDevServer) {
       devServer = server;
+
+      // Serve standalone preview pages at /__preview/:blockId
+      server.middlewares.use((req, res, next) => {
+        const match = req.url?.match(/^\/__preview\/([a-f0-9]+)(\?.*)?$/);
+        if (!match) return next();
+
+        const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preview</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/standalone-preview.tsx"></script>
+  </body>
+</html>`;
+
+        server
+          .transformIndexHtml(req.url!, html)
+          .then((transformed) => {
+            res.setHeader("Content-Type", "text/html");
+            res.end(transformed);
+          })
+          .catch(next);
+      });
     },
 
     // Build mode: scan preview files upfront to populate the block registry

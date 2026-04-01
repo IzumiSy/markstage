@@ -3,7 +3,7 @@ import type { Plugin } from "vite";
 
 /**
  * Virtual module `virtual:previewer-entries` — exports all discovered
- * *.preview.mdx files as an array of { name, Component } objects.
+ * *.md files as an array of { name, Component } objects.
  */
 export function previewerEntriesPlugin(
   hostRoot: string,
@@ -28,7 +28,7 @@ export function previewerEntriesPlugin(
         files.map(async (file, i) => {
           return {
             varName: `Mod${i}`,
-            name: basename(file).replace(/\.preview\.mdx$/, ""),
+            name: basename(file).replace(/\.md$/, ""),
             file,
             filePath: relative(hostRoot, file),
           };

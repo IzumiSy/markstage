@@ -1,4 +1,4 @@
-import type { Plugin } from "vite";
+import type { Plugin, ViteDevServer } from "vite";
 import { transformWithEsbuild } from "vite";
 import type { PreviewBlockEntry } from "./preview-utils";
 import {
@@ -11,6 +11,11 @@ export interface PreviewPluginOptions {
   blockRegistry: Map<string, PreviewBlockEntry>;
   /** CSS file to import in preview blocks (e.g. "@my-lib/styles") */
   cssImport?: string;
+  /**
+   * When true, skip the configureServer middleware for standalone preview
+   * pages (the consumer provides its own). Defaults to false.
+   */
+  skipStandaloneServer?: boolean;
 }
 
 const RESOLVED_REGISTRY_ID = "\0" + REGISTRY_MODULE_ID;
@@ -112,6 +117,72 @@ export function createBasePreviewPlugin(
         return hooks.load(id);
       },
       transform: hooks.transform,
+      configureServer(server: ViteDevServer) {
+        if (options.skipStandaloneServer) return;
+
+        // Serve standalone preview pages at /__preview/:blockId
+        server.middlewares.use((req, res, next) => {
+          const match = req.url?.match(/^\/__preview\/([a-f0-9]+)(\?.*)?$/);
+          if (!match) return next();
+
+          const blockId = match[1];
+          const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preview</title>
+  </head>
+  <body style="margin:0">
+    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px;background:#ffffff"></div>
+    <script type="module">
+import { createElement } from "react";
+import { createRoot } from "react-dom/client";
+
+const WRAP_STYLES = { row: "flex-wrap:wrap;gap:8px", column: "flex-direction:column;gap:8px" };
+const ALIGN_STYLES = { center: "justify-content:center;align-items:center", start: "justify-content:center;align-items:flex-start", end: "justify-content:center;align-items:flex-end" };
+
+const blockId = "${blockId}";
+const params = new URLSearchParams(location.search);
+const themeParam = params.get("theme");
+if (themeParam === "dark" || themeParam === "light") {
+  document.documentElement.setAttribute("data-theme", themeParam);
+  document.documentElement.classList.add(themeParam);
+}
+const wrapParam = params.get("wrap");
+const alignParam = params.get("align");
+const root = document.getElementById("root");
+if (wrapParam && WRAP_STYLES[wrapParam]) root.style.cssText += ";" + WRAP_STYLES[wrapParam];
+if (alignParam && ALIGN_STYLES[alignParam]) root.style.cssText += ";" + ALIGN_STYLES[alignParam];
+
+const mod = await import("/${VIRTUAL_PREFIX}${blockId}");
+if (mod.css) {
+  const style = document.createElement("style");
+  style.textContent = mod.css;
+  document.head.appendChild(style);
+}
+createRoot(root).render(createElement(mod.default));
+
+// Report content height to parent for iframe auto-resize
+new ResizeObserver(() => {
+  window.parent.postMessage(
+    { type: "markstage-resize", blockId, height: root.scrollHeight },
+    "*",
+  );
+}).observe(root);
+    </script>
+  </body>
+</html>`;
+
+          server
+            .transformIndexHtml(req.url!, html)
+            .then((transformed) => {
+              res.setHeader("Content-Type", "text/html");
+              res.end(transformed);
+            })
+            .catch(next);
+        });
+      },
       config() {
         return {
           // Dedupe React so imports from plugin source files (e.g. PreviewBlock.vue

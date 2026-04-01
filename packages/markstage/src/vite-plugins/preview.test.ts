@@ -18,7 +18,7 @@ describe("previewPlugin", () => {
   });
 
   it("transforms a single ```tsx preview block into <PreviewBlock>", async () => {
-    const id = "src/Button.preview.mdx";
+    const id = "src/Button.md";
     const input = [
       "# Hello",
       "",
@@ -42,7 +42,7 @@ describe("previewPlugin", () => {
   });
 
   it("transforms multiple ```tsx preview blocks", async () => {
-    const id = "src/Multi.preview.mdx";
+    const id = "src/Multi.md";
     const input = [
       "```tsx preview",
       "<A />",
@@ -65,11 +65,11 @@ describe("previewPlugin", () => {
   it("does not transform regular ```tsx blocks (without 'preview')", async () => {
     const input = ["```tsx", "<NotPreview />", "```"].join("\n");
 
-    const result = await callTransform(input, "src/Foo.preview.mdx");
+    const result = await callTransform(input, "src/Foo.md");
     expect(result).toBeUndefined();
   });
 
-  it("returns undefined for non-preview.mdx files", async () => {
+  it("returns undefined for non-md files", async () => {
     const input = ["```tsx preview", "<Button />", "```"].join("\n");
 
     const result = await callTransform(input, "src/Button.tsx");
@@ -84,7 +84,7 @@ describe("previewPlugin", () => {
       "```",
     ].join("\n");
 
-    const result = await callTransform(input, "src/Escape.preview.mdx");
+    const result = await callTransform(input, "src/Escape.md");
     expect(result!.code).toContain(
       `code={"const re = /\\\\d+/;\\nconst s = \\"hello\\";"}`,
     );
@@ -99,14 +99,14 @@ describe("previewPlugin", () => {
       "```",
     ].join("\n");
 
-    const result = await callTransform(input, "src/Multiline.preview.mdx");
+    const result = await callTransform(input, "src/Multiline.md");
     expect(result!.code).toContain(
       `code={"<div>\\n  <span>hello</span>\\n</div>"}`,
     );
   });
 
   it("registers blocks in the block registry", async () => {
-    const id = "src/Reg.preview.mdx";
+    const id = "src/Reg.md";
     const input = ['```tsx preview wrap="row"', "<A />", "```"].join("\n");
 
     await callTransform(input, id);
@@ -121,7 +121,7 @@ describe("previewPlugin", () => {
   it("does not include wrap prop in output (handled by preview plugin)", async () => {
     const input = ['```tsx preview wrap="row"', "<A />", "```"].join("\n");
 
-    const result = await callTransform(input, "src/NoWrap.preview.mdx");
+    const result = await callTransform(input, "src/NoWrap.md");
     expect(result!.code).toContain('wrap={"row"}');
   });
 });

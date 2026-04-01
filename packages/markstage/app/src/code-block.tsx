@@ -8,7 +8,10 @@ let highlighterPromise: Promise<HighlighterCore> | undefined;
 function getHighlighter(): Promise<HighlighterCore> {
   if (!highlighterPromise) {
     highlighterPromise = createHighlighterCore({
-      themes: [import("@shikijs/themes/github-dark"), import("@shikijs/themes/github-light")],
+      themes: [
+        import("@shikijs/themes/github-dark"),
+        import("@shikijs/themes/github-light"),
+      ],
       langs: [
         import("@shikijs/langs/tsx"),
         import("@shikijs/langs/jsx"),
@@ -48,11 +51,11 @@ function CopyButton({ text }: { text: string }) {
         justifyContent: "center",
         width: 24,
         height: 24,
-        border: "1px solid var(--border)",
+        border: "1px solid var(--ms-border)",
         borderRadius: 4,
-        backgroundColor: "var(--bg)",
+        backgroundColor: "var(--ms-bg)",
         cursor: "pointer",
-        color: "var(--fg-muted)",
+        color: "var(--ms-fg-muted)",
         opacity: 0.6,
         transition: "opacity 0.15s",
       }}
@@ -106,7 +109,7 @@ export function CodeBlock({
 }) {
   const lang = className?.replace("language-", "") ?? "";
   const radius = noBorderRadius ? 0 : 8;
-  const border = noBorderRadius ? "none" : "1px solid var(--border)";
+  const border = noBorderRadius ? "none" : "1px solid var(--ms-border)";
   const { colorScheme } = useTheme();
   const [html, setHtml] = useState<string | null>(null);
 
@@ -144,7 +147,7 @@ export function CodeBlock({
       <div
         style={{
           position: "relative",
-          background: "var(--code-bg)",
+          background: "var(--ms-code-bg)",
           borderRadius: radius,
           overflowX: "auto",
           overflowY: "hidden",
@@ -164,7 +167,7 @@ export function CodeBlock({
       <CopyButton text={children} />
       <pre
         style={{
-          background: "var(--code-bg)",
+          background: "var(--ms-code-bg)",
           padding: 10,
           borderRadius: radius,
           overflowX: "auto",

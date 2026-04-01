@@ -34,7 +34,23 @@ describe("parseMeta", () => {
   });
 
   it("returns empty object for string without valid pairs", () => {
-    expect(parseMeta("no-pairs-here")).toEqual({});
+    expect(parseMeta("  ")).toEqual({});
+  });
+
+  it("parses boolean flags as 'true'", () => {
+    expect(parseMeta(" standalone")).toEqual({ standalone: "true" });
+  });
+
+  it("parses mixed flags and key-value pairs", () => {
+    expect(parseMeta(' standalone wrap="row" height="300"')).toEqual({
+      standalone: "true",
+      wrap: "row",
+      height: "300",
+    });
+  });
+
+  it("does not treat key part of key=value as a flag", () => {
+    expect(parseMeta('wrap="row"')).toEqual({ wrap: "row" });
   });
 });
 

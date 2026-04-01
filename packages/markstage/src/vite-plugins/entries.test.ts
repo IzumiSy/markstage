@@ -50,19 +50,19 @@ describe("previewerEntriesPlugin", () => {
   });
 
   it("generates import statements and entries array for discovered files", async () => {
-    await mkdir(resolve(tmpDir, "src"), { recursive: true });
+    await mkdir(resolve(tmpDir, "docs"), { recursive: true });
     await writeFile(
-      resolve(tmpDir, "src/Button.preview.mdx"),
+      resolve(tmpDir, "docs/Button.md"),
       "---\ntitle: Button\n---\n# Button",
     );
     await writeFile(
-      resolve(tmpDir, "src/Input.preview.mdx"),
+      resolve(tmpDir, "docs/Input.md"),
       "---\ntitle: Input\n---\n# Input",
     );
 
     const plugin = previewerEntriesPlugin(
       tmpDir,
-      createResolver(tmpDir, "src/**/*.preview.mdx"),
+      createResolver(tmpDir, "docs/**/*.md"),
     );
     const code = await (
       plugin.load as (id: string) => Promise<string | undefined>

@@ -9,11 +9,8 @@ export interface PreviewerRunOptions {
   resolveFiles: () => Promise<string[]>;
 }
 
-/**
- * Start the previewer dev server programmatically.
- */
-export async function startDev({ cwd, config, resolveFiles }: PreviewerRunOptions) {
-  const viteConfig = createPreviewerViteConfig({
+function buildViteConfig({ cwd, config, resolveFiles }: PreviewerRunOptions) {
+  return createPreviewerViteConfig({
     root: cwd,
     title: config.title,
     resolveFiles,
@@ -21,50 +18,33 @@ export async function startDev({ cwd, config, resolveFiles }: PreviewerRunOption
     repo: config.repo,
     vite: config.vite,
   });
-  const server = await createServer(viteConfig);
+}
+
+export async function startDev(opts: PreviewerRunOptions) {
+  const server = await createServer(buildViteConfig(opts));
   await server.listen();
   server.printUrls();
   return server;
 }
 
-/**
- * Build the previewer for production programmatically.
- */
-export async function runBuild({ cwd, config, resolveFiles }: PreviewerRunOptions) {
-  const viteConfig = createPreviewerViteConfig({
-    root: cwd,
-    title: config.title,
-    resolveFiles,
-    css: config.css,
-    repo: config.repo,
-    vite: config.vite,
-  });
+export async function runBuild(opts: PreviewerRunOptions) {
+  const viteConfig = buildViteConfig(opts);
   await build({
     ...viteConfig,
     build: {
       ...viteConfig.build,
-      outDir: resolve(cwd, "dist-preview"),
+      outDir: resolve(opts.cwd, "dist-preview"),
     },
   });
 }
 
-/**
- * Start a static preview server for the built output.
- */
-export async function runPreview({ cwd, config, resolveFiles }: PreviewerRunOptions) {
-  const viteConfig = createPreviewerViteConfig({
-    root: cwd,
-    title: config.title,
-    resolveFiles,
-    css: config.css,
-    repo: config.repo,
-    vite: config.vite,
-  });
+export async function runPreview(opts: PreviewerRunOptions) {
+  const viteConfig = buildViteConfig(opts);
   const server = await preview({
     ...viteConfig,
     build: {
       ...viteConfig.build,
-      outDir: resolve(cwd, "dist-preview"),
+      outDir: resolve(opts.cwd, "dist-preview"),
     },
   });
   server.printUrls();

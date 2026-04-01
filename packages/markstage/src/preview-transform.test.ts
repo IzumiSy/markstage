@@ -1,6 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { extractPreviewBlocks, escapeJsString, hasPreviewBlocks } from "./preview-transform";
-import { parseMeta } from "@izumisy/react-preview";
+import {
+  extractPreviewBlocks,
+  escapeJsString,
+  hasPreviewBlocks,
+} from "./preview-transform";
 
 describe("extractPreviewBlocks", () => {
   it("extracts a single preview block", () => {
@@ -20,9 +23,15 @@ describe("extractPreviewBlocks", () => {
   });
 
   it("extracts multiple preview blocks", () => {
-    const input = ["```tsx preview", "<A />", "```", "", "```tsx preview", "<B />", "```"].join(
-      "\n",
-    );
+    const input = [
+      "```tsx preview",
+      "<A />",
+      "```",
+      "",
+      "```tsx preview",
+      "<B />",
+      "```",
+    ].join("\n");
 
     const blocks = extractPreviewBlocks(input);
     expect(blocks).toHaveLength(2);
@@ -36,7 +45,13 @@ describe("extractPreviewBlocks", () => {
   });
 
   it("preserves multiline code", () => {
-    const input = ["```tsx preview", "<div>", "  <span>hello</span>", "</div>", "```"].join("\n");
+    const input = [
+      "```tsx preview",
+      "<div>",
+      "  <span>hello</span>",
+      "</div>",
+      "```",
+    ].join("\n");
 
     const blocks = extractPreviewBlocks(input);
     expect(blocks[0].code).toBe("<div>\n  <span>hello</span>\n</div>");
@@ -81,27 +96,12 @@ describe("hasPreviewBlocks", () => {
   });
 
   it("returns true when preview blocks have meta attributes", () => {
-    expect(hasPreviewBlocks('```tsx preview wrap="row"\n<A />\n```')).toBe(true);
+    expect(hasPreviewBlocks('```tsx preview wrap="row"\n<A />\n```')).toBe(
+      true,
+    );
   });
 
   it("returns false for normal code blocks", () => {
     expect(hasPreviewBlocks("```tsx\n<A />\n```")).toBe(false);
-  });
-});
-
-describe("parseMeta", () => {
-  it("parses key-value pairs", () => {
-    expect(parseMeta(' wrap="row"')).toEqual({ wrap: "row" });
-  });
-
-  it("parses multiple attributes", () => {
-    expect(parseMeta(' wrap="row" gap="16"')).toEqual({
-      wrap: "row",
-      gap: "16",
-    });
-  });
-
-  it("returns empty object for empty string", () => {
-    expect(parseMeta("")).toEqual({});
   });
 });

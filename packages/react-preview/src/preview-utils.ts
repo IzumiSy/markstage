@@ -6,6 +6,7 @@ export interface PreviewBlockEntry {
   sourceFile: string;
   wrap?: string;
   height?: string;
+  standalone?: boolean;
 }
 
 export function simpleHash(str: string): string {
@@ -13,14 +14,22 @@ export function simpleHash(str: string): string {
 }
 
 /**
- * Parse key="value" pairs from a meta string.
+ * Parse key="value" pairs and boolean flags from a meta string.
  */
 export function parseMeta(meta: string): Record<string, string> {
   const result: Record<string, string> = {};
-  const re = /(\w+)="([^"]*)"/g;
+  const kvRe = /(\w+)="([^"]*)"/g;
   let m: RegExpExecArray | null;
-  while ((m = re.exec(meta)) !== null) {
+  while ((m = kvRe.exec(meta)) !== null) {
     result[m[1]] = m[2];
+  }
+  // Strip key="value" pairs, then match remaining standalone words as flags
+  const remaining = meta.replace(kvRe, "");
+  const flagRe = /\b(\w+)\b/g;
+  while ((m = flagRe.exec(remaining)) !== null) {
+    if (!(m[1] in result)) {
+      result[m[1]] = "true";
+    }
   }
   return result;
 }

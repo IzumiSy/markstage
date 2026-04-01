@@ -10,27 +10,9 @@ export const WRAP_STYLES: Record<string, string> = {
 
 export const ALIGN_STYLES: Record<string, string> = {
   center: "justify-content:center;align-items:center",
-  start: "justify-content:flex-start;align-items:flex-start",
-  end: "justify-content:flex-end;align-items:flex-end",
+  start: "justify-content:center;align-items:flex-start",
+  end: "justify-content:center;align-items:flex-end",
 };
-
-/**
- * Adapt a CSS string for use inside a shadow DOM container.
- *
- * - Replaces standalone `body` selectors with `:host` so that styles
- *   targeting `body` (e.g. background-color, font-family from CSS resets)
- *   apply to the shadow root host element instead.
- * - Replaces `:root` selectors with `:host` so that theme variables
- *   (e.g. --primary, --background) are available inside the shadow root.
- * - Replaces `html` selectors with `:host` so that theme-qualified
- *   selectors like `html.dark` become `:host(.dark)`.
- */
-export function adaptCssForShadowDom(css: string): string {
-  return css
-    .replace(/\bbody\b/g, ":host")
-    .replace(/:root/g, ":host")
-    .replace(/\bhtml\b/g, ":host");
-}
 
 /**
  * Generate the virtual module code for a preview block.

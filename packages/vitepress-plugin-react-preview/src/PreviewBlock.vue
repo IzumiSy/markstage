@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from "vue";
-import {
-  setupShadowPreview,
-  injectPreviewCss,
-  cleanupPreviewCss,
-} from "@izumisy/react-preview/dom";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 
 const props = defineProps<{
   code: string;
@@ -13,10 +8,13 @@ const props = defineProps<{
   height?: string;
   wrap?: string;
   align?: string;
+  standalone?: string;
 }>();
 
+const isStandalone = computed(() => props.standalone === "true");
 const showCode = ref(true);
-const containerRef = ref<HTMLDivElement | null>(null);
+const iframeRef = ref<HTMLIFrameElement | null>(null);
+const iframeHeight = ref(props.height ? Number(props.height) : 150);
 
 const decodedCode = computed(() => {
   try {
@@ -35,58 +33,81 @@ const decodedHighlighted = computed(() => {
   }
 });
 
-let reactRoot: any = null;
-let cleanupThemeSyncFn: (() => void) | null = null;
+const currentTheme = computed(() => {
+  if (typeof document === "undefined") return "light";
+  return document.documentElement.classList.contains("dark") ? "dark" : "light";
+});
 
-onMounted(async () => {
-  const el = containerRef.value;
-  if (!el) return;
+const previewUrl = computed(() => {
+  const params = new URLSearchParams({ theme: currentTheme.value });
+  if (props.wrap) params.set("wrap", props.wrap);
+  if (props.align) params.set("align", props.align);
+  return `/__preview/${props.blockId}?${params}`;
+});
 
-  const [{ createElement }, { createRoot }] = await Promise.all([
-    import("react"),
-    import("react-dom/client"),
-  ]);
+function onMessage(e: MessageEvent) {
+  if (
+    e.data?.type === "markstage-resize" &&
+    e.data?.blockId === props.blockId
+  ) {
+    iframeHeight.value = e.data.height;
+  }
+}
 
-  const { shadow, mountPoint, cleanupThemeSync } = setupShadowPreview(el, {
-    align: props.align,
-    wrap: props.wrap,
-  });
-  cleanupThemeSyncFn = cleanupThemeSync;
-
-  // In dev mode, import each block module directly to avoid stale registry
-  // issues. VitePress lazily processes pages, so the centralized registry
-  // module may not contain blocks from pages that haven't been visited yet.
-  // In build mode all pages are processed upfront, so the registry is safe.
-  const mod = import.meta.env.DEV
-    ? await import(/* @vite-ignore */ `/virtual:markstage-preview-${props.blockId}`)
-    : await import("virtual:markstage-preview-registry").then(
-        (r) => r.registry[props.blockId]?.(),
-      );
-  if (!mod) return;
-
-  if (mod.css) injectPreviewCss(shadow, mod.css, props.blockId);
-
-  reactRoot = createRoot(mountPoint);
-  reactRoot.render(createElement(mod.default));
+onMounted(() => {
+  window.addEventListener("message", onMessage);
 });
 
 onBeforeUnmount(() => {
-  cleanupThemeSyncFn?.();
-  cleanupThemeSyncFn = null;
-  reactRoot?.unmount();
-  reactRoot = null;
-  cleanupPreviewCss(props.blockId);
+  window.removeEventListener("message", onMessage);
 });
 </script>
 
 <template>
   <div class="markstage-preview vp-raw">
-    <div class="markstage-preview-render">
-      <div
-        ref="containerRef"
-        :style="{ minHeight: height ? height + 'px' : undefined }"
-      />
-    </div>
+    <template v-if="isStandalone">
+      <a
+        :href="previewUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="markstage-preview-standalone-link"
+      >
+        <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5">
+          <path d="M7 3H3v10h10V9" />
+          <path d="M10 2h4v4" />
+          <path d="M14 2L7 9" />
+        </svg>
+        <span class="markstage-preview-standalone-text">
+          <span class="markstage-preview-standalone-title">Open full-page preview</span>
+          <span class="markstage-preview-standalone-desc">This component requires a full viewport to render correctly.</span>
+        </span>
+      </a>
+    </template>
+    <template v-else>
+      <div class="markstage-preview-render">
+        <iframe
+          ref="iframeRef"
+          :src="previewUrl"
+          :style="{ height: iframeHeight + 'px' }"
+          class="markstage-preview-iframe"
+        />
+      </div>
+      <div class="markstage-preview-actions">
+        <a
+          :href="previewUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="markstage-preview-fullscreen-link"
+        >
+          Open full preview
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 3H3v10h10V9" />
+            <path d="M10 2h4v4" />
+            <path d="M14 2L7 9" />
+          </svg>
+        </a>
+      </div>
+    </template>
     <div class="markstage-preview-code">
       <button
         class="markstage-preview-toggle"
@@ -125,12 +146,13 @@ onBeforeUnmount(() => {
 
 .markstage-preview-render {
   background-color: var(--vp-c-bg);
-  background-image: radial-gradient(
-    circle,
-    var(--vp-c-divider) 1px,
-    transparent 1px
-  );
-  background-size: 16px 16px;
+}
+
+.markstage-preview-iframe {
+  display: block;
+  width: 100%;
+  border: none;
+  transition: height 0.15s ease;
 }
 
 .markstage-preview-code {
@@ -159,6 +181,26 @@ onBeforeUnmount(() => {
   transform: rotate(90deg);
 }
 
+.markstage-preview-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 12px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+
+.markstage-preview-fullscreen-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--vp-c-text-3);
+  text-decoration: none;
+}
+
+.markstage-preview-fullscreen-link:hover {
+  color: var(--vp-c-text-1);
+}
+
 .markstage-preview-code svg {
   transition: transform 0.15s;
 }
@@ -177,5 +219,36 @@ onBeforeUnmount(() => {
 .markstage-preview-code :deep(pre code) {
   font-size: 13px !important;
   line-height: 1.6 !important;
+}
+
+.markstage-preview-standalone-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px;
+  text-decoration: none;
+  color: var(--vp-c-text-2);
+  transition: background-color 0.15s;
+}
+
+.markstage-preview-standalone-link:hover {
+  background-color: var(--vp-c-bg-soft);
+}
+
+.markstage-preview-standalone-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.markstage-preview-standalone-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-1);
+}
+
+.markstage-preview-standalone-desc {
+  font-size: 12px;
+  color: var(--vp-c-text-3);
 }
 </style>

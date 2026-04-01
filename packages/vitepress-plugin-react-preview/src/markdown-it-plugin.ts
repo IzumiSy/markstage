@@ -33,12 +33,15 @@ export function createMarkdownItPlugin(
 
         const meta = parseMeta(info.slice("tsx preview".length));
 
+        const isStandalone = meta.standalone === "true";
+
         // Register block in the shared registry for the preview plugin
         blockRegistry.set(blockId, {
           code,
           sourceFile: "",
           wrap: meta.wrap,
           height: meta.height,
+          standalone: isStandalone,
         });
 
         // Use VitePress's configured Shiki highlighter if available
@@ -48,8 +51,9 @@ export function createMarkdownItPlugin(
         const heightAttr = meta.height ? ` height="${meta.height}"` : "";
         const wrapAttr = meta.wrap ? ` wrap="${meta.wrap}"` : "";
         const alignAttr = meta.align ? ` align="${meta.align}"` : "";
+        const standaloneAttr = isStandalone ? ` standalone="true"` : "";
 
-        return `<PreviewBlock code="${encodedCode}" block-id="${blockId}" highlighted="${encodedHighlighted}"${heightAttr}${wrapAttr}${alignAttr} />\n`;
+        return `<PreviewBlock code="${encodedCode}" block-id="${blockId}" highlighted="${encodedHighlighted}"${heightAttr}${wrapAttr}${alignAttr}${standaloneAttr} />\n`;
       }
 
       return defaultFence(tokens, idx, options, env, self);

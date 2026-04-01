@@ -14,7 +14,9 @@ function slugify(children: ReactNode): string {
 
 export const mdxComponents = {
   h1: ({ children }: { children?: ReactNode }) => (
-    <h1 style={{ fontSize: 28, fontWeight: 700, margin: "0 0 16px" }}>{children}</h1>
+    <h1 style={{ fontSize: 28, fontWeight: 700, margin: "0 0 16px" }}>
+      {children}
+    </h1>
   ),
   h2: ({ children }: { children?: ReactNode }) => {
     const id = slugify(children);
@@ -25,7 +27,7 @@ export const mdxComponents = {
           fontSize: 20,
           fontWeight: 600,
           margin: "24px 0 12px",
-          borderBottom: "1px solid var(--border)",
+          borderBottom: "1px solid var(--ms-border)",
           paddingBottom: 8,
         }}
       >
@@ -36,7 +38,10 @@ export const mdxComponents = {
   h3: ({ children }: { children?: ReactNode }) => {
     const id = slugify(children);
     return (
-      <h3 id={id} style={{ fontSize: 16, fontWeight: 600, margin: "20px 0 8px" }}>
+      <h3
+        id={id}
+        style={{ fontSize: 16, fontWeight: 600, margin: "20px 0 8px" }}
+      >
         {children}
       </h3>
     );
@@ -68,15 +73,15 @@ export const mdxComponents = {
   thead: ({ children }: { children?: ReactNode }) => <thead>{children}</thead>,
   tbody: ({ children }: { children?: ReactNode }) => <tbody>{children}</tbody>,
   tr: ({ children }: { children?: ReactNode }) => (
-    <tr style={{ borderBottom: "1px solid var(--border)" }}>{children}</tr>
+    <tr style={{ borderBottom: "1px solid var(--ms-border)" }}>{children}</tr>
   ),
   th: ({ children }: { children?: ReactNode }) => (
     <th
       style={{
-        background: "var(--table-header-bg)",
+        background: "var(--ms-code-bg)",
         padding: "8px 12px",
         textAlign: "left" as const,
-        borderBottom: "2px solid var(--border)",
+        borderBottom: "2px solid var(--ms-border)",
         fontWeight: 600,
       }}
     >
@@ -84,12 +89,14 @@ export const mdxComponents = {
     </th>
   ),
   td: ({ children }: { children?: ReactNode }) => (
-    <td style={{ padding: "8px 12px", verticalAlign: "top" as const }}>{children}</td>
+    <td style={{ padding: "8px 12px", verticalAlign: "top" as const }}>
+      {children}
+    </td>
   ),
   code: ({ children }: { children?: ReactNode }) => (
     <code
       style={{
-        background: "var(--code-bg)",
+        background: "var(--ms-code-bg)",
         padding: "2px 6px",
         borderRadius: 4,
         fontSize: 13,

@@ -1,9 +1,6 @@
 ---
 title: Combobox
 description: AppShell Combobox component
-sidebar:
-  group: Components
-  order: 2
 ---
 
 # Combobox
@@ -12,7 +9,7 @@ AppShell の Combobox コンポーネントのプレビュー例です。
 
 ## Basic Usage
 
-```tsx preview height="300"
+```tsx preview height="300" align="start"
 import { Combobox } from "@tailor-platform/app-shell"
 
 <div style={{ width: "500px" }}>
@@ -25,7 +22,7 @@ import { Combobox } from "@tailor-platform/app-shell"
 
 ## Multiple Selection
 
-```tsx preview height="300"
+```tsx preview height="300" align="start"
 import { Combobox } from "@tailor-platform/app-shell"
 
 <div style={{ width: "500px" }}>

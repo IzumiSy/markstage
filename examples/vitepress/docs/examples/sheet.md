@@ -8,9 +8,7 @@ AppShell の Sheet コンポーネントのプレビュー例です。
 import { Sheet, Button } from "@tailor-platform/app-shell"
 
 <Sheet.Root>
-  <Sheet.Trigger asChild>
-    <Button>Open Sheet</Button>
-  </Sheet.Trigger>
+  <Sheet.Trigger render={<Button />}>Open Sheet</Sheet.Trigger>
   <Sheet.Content>
     <Sheet.Header>
       <Sheet.Title>Sheet Title</Sheet.Title>
@@ -20,9 +18,7 @@ import { Sheet, Button } from "@tailor-platform/app-shell"
       <p>Sheet content goes here.</p>
     </div>
     <Sheet.Footer>
-      <Sheet.Close asChild>
-        <Button variant="outline">Close</Button>
-      </Sheet.Close>
+      <Sheet.Close render={<Button variant="outline" />}>Close</Sheet.Close>
     </Sheet.Footer>
   </Sheet.Content>
 </Sheet.Root>
@@ -34,9 +30,7 @@ import { Sheet, Button } from "@tailor-platform/app-shell"
 import { Sheet, Button } from "@tailor-platform/app-shell"
 
 <Sheet.Root side="right">
-  <Sheet.Trigger asChild>
-    <Button variant="outline">Right</Button>
-  </Sheet.Trigger>
+  <Sheet.Trigger render={<Button variant="outline" />}>Right</Sheet.Trigger>
   <Sheet.Content>
     <Sheet.Header>
       <Sheet.Title>Right Sheet</Sheet.Title>
@@ -46,9 +40,7 @@ import { Sheet, Button } from "@tailor-platform/app-shell"
 </Sheet.Root>
 
 <Sheet.Root side="left">
-  <Sheet.Trigger asChild>
-    <Button variant="outline">Left</Button>
-  </Sheet.Trigger>
+  <Sheet.Trigger render={<Button variant="outline" />}>Left</Sheet.Trigger>
   <Sheet.Content>
     <Sheet.Header>
       <Sheet.Title>Left Sheet</Sheet.Title>
@@ -58,9 +50,7 @@ import { Sheet, Button } from "@tailor-platform/app-shell"
 </Sheet.Root>
 
 <Sheet.Root side="bottom">
-  <Sheet.Trigger asChild>
-    <Button variant="outline">Bottom</Button>
-  </Sheet.Trigger>
+  <Sheet.Trigger render={<Button variant="outline" />}>Bottom</Sheet.Trigger>
   <Sheet.Content>
     <Sheet.Header>
       <Sheet.Title>Bottom Sheet</Sheet.Title>

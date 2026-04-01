@@ -4,7 +4,7 @@ AppShell の Table コンポーネントのプレビュー例です。
 
 ## Basic Usage
 
-```tsx preview
+```tsx preview height="500"
 import { Table } from "@tailor-platform/app-shell"
 
 <Table.Root>
@@ -37,7 +37,7 @@ import { Table } from "@tailor-platform/app-shell"
 
 ## With Caption and Footer
 
-```tsx preview
+```tsx preview height="500"
 import { Table } from "@tailor-platform/app-shell"
 
 <Table.Root>
