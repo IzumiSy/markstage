@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CodeBlock } from "./code-block";
 import { useTheme } from "./theme";
 
@@ -103,10 +103,23 @@ export function PreviewBlock({
     height ? Number(height) : DEFAULT_HEIGHT,
   );
   const { colorScheme } = useTheme();
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Build the initial URL (theme is applied via postMessage after load)
   const params = new URLSearchParams({ theme: colorScheme });
   if (wrap) params.set("wrap", wrap);
   if (align) params.set("align", align);
   const previewUrl = `/__preview/${blockId}?${params}`;
+
+  // Sync theme changes to the iframe via postMessage instead of reloading
+  const initialColorScheme = useRef(colorScheme);
+  useEffect(() => {
+    if (colorScheme === initialColorScheme.current) return;
+    iframeRef.current?.contentWindow?.postMessage(
+      { type: "markstage-theme", theme: colorScheme },
+      "*",
+    );
+  }, [colorScheme]);
 
   useEffect(() => {
     function onMessage(e: MessageEvent) {
@@ -191,6 +204,7 @@ export function PreviewBlock({
             <ExternalLinkIcon />
           </a>
           <iframe
+            ref={iframeRef}
             src={previewUrl}
             style={{
               display: "block",

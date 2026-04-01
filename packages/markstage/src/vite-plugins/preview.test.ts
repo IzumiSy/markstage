@@ -1,11 +1,16 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { previewPlugin, type PreviewPlugin } from "./preview";
+import { previewPlugin, type PreviewPluginResult } from "./preview";
 import { simpleHash } from "@izumisy/react-preview";
+import type { Plugin } from "vite";
 
-let plugin: PreviewPlugin;
+let preview: PreviewPluginResult;
+
+function getTransformPlugin(): Plugin {
+  return preview.plugins.find((p) => p.name === "markstage-preview")!;
+}
 
 async function callTransform(code: string, id: string) {
-  const transform = plugin.transform as (
+  const transform = getTransformPlugin().transform as (
     code: string,
     id: string,
   ) => Promise<{ code: string } | undefined>;
@@ -14,7 +19,7 @@ async function callTransform(code: string, id: string) {
 
 describe("previewPlugin", () => {
   beforeEach(() => {
-    plugin = previewPlugin(async () => []);
+    preview = previewPlugin(async () => []);
   });
 
   it("transforms a single ```tsx preview block into <PreviewBlock>", async () => {
@@ -111,7 +116,7 @@ describe("previewPlugin", () => {
 
     await callTransform(input, id);
     const blockId = simpleHash(`${id}:0`);
-    const entry = plugin.blockRegistry.get(blockId);
+    const entry = preview.blockRegistry.get(blockId);
     expect(entry).toBeDefined();
     expect(entry!.code).toBe("<A />");
     expect(entry!.sourceFile).toBe(id);

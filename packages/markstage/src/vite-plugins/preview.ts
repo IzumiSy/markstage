@@ -7,14 +7,14 @@ import {
 import {
   simpleHash,
   type PreviewBlockEntry,
-  createPreviewHooks,
+  createBasePreviewPlugin,
   resolveCssImportPath,
   VIRTUAL_PREFIX,
   REGISTRY_MODULE_ID,
-  STANDALONE_CLIENT_MODULE_ID,
 } from "@izumisy/react-preview";
 
-export type PreviewPlugin = Plugin & {
+export type PreviewPluginResult = {
+  plugins: Plugin[];
   blockRegistry: Map<string, PreviewBlockEntry>;
 };
 
@@ -30,7 +30,7 @@ export type PreviewPlugin = Plugin & {
 export function previewPlugin(
   resolveFiles: () => Promise<string[]>,
   options?: { css?: string; hostRoot?: string },
-): PreviewPlugin {
+): PreviewPluginResult {
   const blockRegistry = new Map<string, PreviewBlockEntry>();
   let devServer: ViteDevServer | null = null;
 
@@ -39,24 +39,17 @@ export function previewPlugin(
     ? resolveCssImportPath(options.css, options.hostRoot)
     : undefined;
 
-  const hooks = createPreviewHooks({
+  // Reuse the base preview plugin for virtual modules + standalone server
+  const basePlugins = createBasePreviewPlugin("markstage-preview-base", {
     blockRegistry,
     cssImport,
   });
 
-  return {
+  const transformPlugin: Plugin = {
     name: "markstage-preview",
     enforce: "pre",
-    blockRegistry,
-
-    resolveId: hooks.resolveId,
-    load: hooks.load,
 
     async transform(code, id) {
-      // Delegate JSX compilation for virtual modules
-      const virtualResult = await hooks.transform(code, id);
-      if (virtualResult) return virtualResult;
-
       if (!id.endsWith(".md")) return;
 
       // Transform ```tsx preview blocks in MDX source into <PreviewBlock> components
@@ -125,33 +118,6 @@ export function previewPlugin(
 
     configureServer(server: ViteDevServer) {
       devServer = server;
-
-      // Serve standalone preview pages at /__preview/:blockId
-      server.middlewares.use((req, res, next) => {
-        const match = req.url?.match(/^\/__preview\/([a-f0-9]+)(\?.*)?$/);
-        if (!match) return next();
-
-        const html = `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Preview</title>
-  </head>
-  <body style="margin:0">
-    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px;background:#ffffff"></div>
-    <script type="module" src="/${STANDALONE_CLIENT_MODULE_ID}"></script>
-  </body>
-</html>`;
-
-        server
-          .transformIndexHtml(req.url!, html)
-          .then((transformed) => {
-            res.setHeader("Content-Type", "text/html");
-            res.end(transformed);
-          })
-          .catch(next);
-      });
     },
 
     // Build mode: scan preview files upfront to populate the block registry
@@ -176,5 +142,10 @@ export function previewPlugin(
         }
       }
     },
+  };
+
+  return {
+    plugins: [transformPlugin, ...basePlugins],
+    blockRegistry,
   };
 }

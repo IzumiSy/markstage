@@ -1,17 +1,27 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
 type ColorScheme = "light" | "dark";
 
 interface ThemeContextValue {
   colorScheme: ColorScheme;
+  toggle: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
   colorScheme: "light",
+  toggle: () => {},
 });
 
 function getSystemScheme(): ColorScheme {
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
@@ -33,7 +43,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  return <ThemeContext.Provider value={{ colorScheme }}>{children}</ThemeContext.Provider>;
+  const toggle = () =>
+    setColorScheme((s) => (s === "light" ? "dark" : "light"));
+
+  return (
+    <ThemeContext.Provider value={{ colorScheme, toggle }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 
 export function useTheme() {

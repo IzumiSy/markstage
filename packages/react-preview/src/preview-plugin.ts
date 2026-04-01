@@ -8,6 +8,7 @@ import {
   WRAP_STYLES,
   ALIGN_STYLES,
   generatePreviewModuleCode,
+  generateStandaloneHtml,
 } from "./preview-module";
 
 export interface PreviewPluginOptions {
@@ -186,18 +187,9 @@ export function createBasePreviewPlugin(
       configureServer(server: ViteDevServer) {
         if (options.skipStandaloneServer) return;
 
-        const standaloneHtml = `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Preview</title>
-  </head>
-  <body style="margin:0;background:transparent">
-    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px"></div>
-    <script type="module" src="/${STANDALONE_CLIENT_MODULE_ID}"></script>
-  </body>
-</html>`;
+        const standaloneHtml = generateStandaloneHtml(
+          STANDALONE_CLIENT_MODULE_ID,
+        );
 
         // Serve standalone preview pages at /__preview/:blockId
         server.middlewares.use((req, res, next) => {
@@ -319,18 +311,7 @@ export function createPreviewBuildPlugin(
       const standaloneFileName = this.getFileName(standaloneChunkRefId);
 
       for (const blockId of blockIds) {
-        const html = `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Preview</title>
-  </head>
-  <body style="margin:0;background:transparent">
-    <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px"></div>
-    <script type="module" src="/${standaloneFileName}"></script>
-  </body>
-</html>`;
+        const html = generateStandaloneHtml(standaloneFileName);
 
         this.emitFile({
           type: "asset",

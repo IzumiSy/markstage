@@ -11,6 +11,7 @@ export {
   WRAP_STYLES,
   ALIGN_STYLES,
   generatePreviewModuleCode,
+  generateStandaloneHtml,
 } from "./preview-module";
 export {
   type PreviewPluginOptions,
