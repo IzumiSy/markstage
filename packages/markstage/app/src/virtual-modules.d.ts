@@ -4,7 +4,7 @@ declare module "virtual:previewer-entries" {
     title?: string;
     description?: string;
   }
-  interface PreviewEntry {
+  export interface PreviewEntry {
     name: string;
     Component: ComponentType;
     frontmatter: PreviewEntryFrontmatter;

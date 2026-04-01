@@ -1,20 +1,25 @@
-import { useEffect, useRef, useState, type ComponentType } from "react";
+import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { MDXProvider } from "@mdx-js/react";
-import { entries } from "virtual:previewer-entries";
+import { entries, type PreviewEntry } from "virtual:previewer-entries";
 import { mdxComponents } from "./mdx-components";
 import { ThemeProvider } from "./theme";
 
 const title: string = __PREVIEWER_TITLE__;
 
-interface PreviewEntry {
-  name: string;
-  Component: ComponentType;
-  frontmatter: Record<string, unknown>;
-  filePath: string;
+function getPathname() {
+  return decodeURIComponent(window.location.pathname).replace(/^\//, "");
+}
+
+function usePathname() {
+  const subscribe = useCallback((cb: () => void) => {
+    window.addEventListener("popstate", cb);
+    return () => window.removeEventListener("popstate", cb);
+  }, []);
+  return useSyncExternalStore(subscribe, getPathname);
 }
 
 function Sidebar({
-  entries,
+  entries: items,
   selected,
   onSelect,
 }: {
@@ -32,7 +37,7 @@ function Sidebar({
         flexShrink: 0,
       }}
     >
-      {entries.map((entry) => (
+      {items.map((entry) => (
         <button
           key={entry.name}
           onClick={() => onSelect(entry.name)}
@@ -45,7 +50,9 @@ function Sidebar({
             border: "none",
             cursor: "pointer",
             backgroundColor:
-              selected === entry.name ? "var(--ms-sidebar-active)" : "transparent",
+              selected === entry.name
+                ? "var(--ms-sidebar-active)"
+                : "transparent",
             fontWeight: selected === entry.name ? 600 : 400,
             color: "var(--ms-fg)",
             fontFamily: "inherit",
@@ -89,8 +96,22 @@ function PreviewContent({ entry }: { entry: PreviewEntry }) {
 }
 
 export function App() {
-  const [selected, setSelected] = useState(entries[0]?.name ?? null);
+  const pathname = usePathname();
+  const selected = pathname || entries[0]?.name || null;
   const current = entries.find((e: PreviewEntry) => e.name === selected);
+
+  // Redirect bare "/" to the first entry's path
+  useEffect(() => {
+    if (!pathname && entries[0]) {
+      history.replaceState(null, "", `/${encodeURIComponent(entries[0].name)}`);
+    }
+  }, [pathname]);
+
+  const setSelected = useCallback((name: string) => {
+    history.pushState(null, "", `/${encodeURIComponent(name)}`);
+    // pushState doesn't fire popstate, so dispatch one manually to trigger re-render
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  }, []);
 
   return (
     <ThemeProvider>
@@ -119,7 +140,7 @@ export function App() {
           </header>
           <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
             <Sidebar
-              entries={entries as PreviewEntry[]}
+              entries={entries}
               selected={selected}
               onSelect={setSelected}
             />

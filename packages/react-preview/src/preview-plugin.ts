@@ -4,6 +4,7 @@ import type { PreviewBlockEntry } from "./preview-utils";
 import {
   VIRTUAL_PREFIX,
   REGISTRY_MODULE_ID,
+  STANDALONE_CLIENT_MODULE_ID,
   generatePreviewModuleCode,
 } from "./preview-module";
 
@@ -19,6 +20,7 @@ export interface PreviewPluginOptions {
 }
 
 const RESOLVED_REGISTRY_ID = "\0" + REGISTRY_MODULE_ID;
+const RESOLVED_STANDALONE_CLIENT_ID = "\0" + STANDALONE_CLIENT_MODULE_ID;
 
 /**
  * Create the common preview hook functions for virtual module resolution,
@@ -44,6 +46,10 @@ export function createPreviewHooks(options: PreviewPluginOptions) {
       return RESOLVED_REGISTRY_ID;
     }
 
+    if (id === STANDALONE_CLIENT_MODULE_ID) {
+      return RESOLVED_STANDALONE_CLIENT_ID;
+    }
+
     // Handle both "virtual:markstage-preview-xxx" (from JS imports) and
     // "/virtual:markstage-preview-xxx" (from URL requests)
     const cleanId = id.startsWith("/") ? id.slice(1) : id;
@@ -64,6 +70,10 @@ export function createPreviewHooks(options: PreviewPluginOptions) {
       return `export const registry = {\n${imports.join(",\n")}\n};\n`;
     }
 
+    if (id === RESOLVED_STANDALONE_CLIENT_ID) {
+      return generateStandaloneClientCode();
+    }
+
     if (!id.startsWith("\0" + VIRTUAL_PREFIX)) return;
 
     const blockId = id
@@ -76,13 +86,55 @@ export function createPreviewHooks(options: PreviewPluginOptions) {
   }
 
   async function transform(code: string, id: string) {
-    if (id === RESOLVED_REGISTRY_ID) return; // registry is plain JS, no JSX
+    if (id === RESOLVED_REGISTRY_ID || id === RESOLVED_STANDALONE_CLIENT_ID)
+      return;
     if (id.startsWith("\0" + VIRTUAL_PREFIX)) {
       return transformWithEsbuild(code, id.slice(1), { jsx: "automatic" });
     }
   }
 
   return { resolveId, load, transform };
+}
+
+function generateStandaloneClientCode(): string {
+  return `\
+import { createElement } from "react";
+import { createRoot } from "react-dom/client";
+import { registry } from ${JSON.stringify(REGISTRY_MODULE_ID)};
+
+var WRAP_STYLES = { row: "flex-wrap:wrap;gap:8px", column: "flex-direction:column;gap:8px" };
+var ALIGN_STYLES = { center: "justify-content:center;align-items:center", start: "justify-content:center;align-items:flex-start", end: "justify-content:center;align-items:flex-end" };
+
+var blockId = location.pathname.split("/").pop();
+var params = new URLSearchParams(location.search);
+
+var themeParam = params.get("theme");
+if (themeParam === "dark" || themeParam === "light") {
+  document.documentElement.setAttribute("data-theme", themeParam);
+  document.documentElement.classList.add(themeParam);
+}
+
+var wrapParam = params.get("wrap");
+var alignParam = params.get("align");
+var root = document.getElementById("root");
+if (wrapParam && WRAP_STYLES[wrapParam]) root.style.cssText += ";" + WRAP_STYLES[wrapParam];
+if (alignParam && ALIGN_STYLES[alignParam]) root.style.cssText += ";" + ALIGN_STYLES[alignParam];
+
+var mod = await registry[blockId]();
+if (mod.css) {
+  var style = document.createElement("style");
+  style.textContent = mod.css;
+  document.head.appendChild(style);
+}
+createRoot(root).render(createElement(mod.default));
+
+new ResizeObserver(function() {
+  window.parent.postMessage(
+    { type: "markstage-resize", blockId: blockId, height: root.scrollHeight },
+    "*"
+  );
+}).observe(root);
+`;
 }
 
 /**
@@ -120,13 +172,7 @@ export function createBasePreviewPlugin(
       configureServer(server: ViteDevServer) {
         if (options.skipStandaloneServer) return;
 
-        // Serve standalone preview pages at /__preview/:blockId
-        server.middlewares.use((req, res, next) => {
-          const match = req.url?.match(/^\/__preview\/([a-f0-9]+)(\?.*)?$/);
-          if (!match) return next();
-
-          const blockId = match[1];
-          const html = `<!doctype html>
+        const standaloneHtml = `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -135,47 +181,17 @@ export function createBasePreviewPlugin(
   </head>
   <body style="margin:0">
     <div id="root" style="display:flex;justify-content:center;align-items:center;min-height:100vh;padding:24px;background:#ffffff"></div>
-    <script type="module">
-import { createElement } from "react";
-import { createRoot } from "react-dom/client";
-
-const WRAP_STYLES = { row: "flex-wrap:wrap;gap:8px", column: "flex-direction:column;gap:8px" };
-const ALIGN_STYLES = { center: "justify-content:center;align-items:center", start: "justify-content:center;align-items:flex-start", end: "justify-content:center;align-items:flex-end" };
-
-const blockId = "${blockId}";
-const params = new URLSearchParams(location.search);
-const themeParam = params.get("theme");
-if (themeParam === "dark" || themeParam === "light") {
-  document.documentElement.setAttribute("data-theme", themeParam);
-  document.documentElement.classList.add(themeParam);
-}
-const wrapParam = params.get("wrap");
-const alignParam = params.get("align");
-const root = document.getElementById("root");
-if (wrapParam && WRAP_STYLES[wrapParam]) root.style.cssText += ";" + WRAP_STYLES[wrapParam];
-if (alignParam && ALIGN_STYLES[alignParam]) root.style.cssText += ";" + ALIGN_STYLES[alignParam];
-
-const mod = await import("/${VIRTUAL_PREFIX}${blockId}");
-if (mod.css) {
-  const style = document.createElement("style");
-  style.textContent = mod.css;
-  document.head.appendChild(style);
-}
-createRoot(root).render(createElement(mod.default));
-
-// Report content height to parent for iframe auto-resize
-new ResizeObserver(() => {
-  window.parent.postMessage(
-    { type: "markstage-resize", blockId, height: root.scrollHeight },
-    "*",
-  );
-}).observe(root);
-    </script>
+    <script type="module" src="/${STANDALONE_CLIENT_MODULE_ID}"></script>
   </body>
 </html>`;
 
+        // Serve standalone preview pages at /__preview/:blockId
+        server.middlewares.use((req, res, next) => {
+          const match = req.url?.match(/^\/__preview\/([a-f0-9]+)(\?.*)?$/);
+          if (!match) return next();
+
           server
-            .transformIndexHtml(req.url!, html)
+            .transformIndexHtml(req.url!, standaloneHtml)
             .then((transformed) => {
               res.setHeader("Content-Type", "text/html");
               res.end(transformed);

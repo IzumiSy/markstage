@@ -1,9 +1,6 @@
 ---
 title: Button
 description: AppShell Button component
-sidebar:
-  group: Components
-  order: 1
 ---
 
 # Button

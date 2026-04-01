@@ -2,6 +2,8 @@ import type { PreviewBlockEntry } from "./preview-utils";
 
 export const VIRTUAL_PREFIX = "virtual:markstage-preview-";
 export const REGISTRY_MODULE_ID = "virtual:markstage-preview-registry";
+export const STANDALONE_CLIENT_MODULE_ID =
+  "virtual:markstage-standalone-client";
 
 export const WRAP_STYLES: Record<string, string> = {
   row: "flex-wrap:wrap;gap:8px",
