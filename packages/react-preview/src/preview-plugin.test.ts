@@ -5,7 +5,6 @@ import {
   VIRTUAL_PREFIX,
   REGISTRY_MODULE_ID,
   STANDALONE_CLIENT_MODULE_ID,
-  generatePreviewModuleCode,
 } from "./preview-module";
 
 function setupHooks(
