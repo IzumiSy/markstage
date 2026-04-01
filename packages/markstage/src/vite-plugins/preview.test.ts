@@ -37,9 +37,7 @@ describe("previewPlugin", () => {
     const result = await callTransform(input, id);
     const blockId = simpleHash(`${id}:0`);
     expect(result!.code).toContain(`blockId={"${blockId}"}`);
-    expect(result!.code).toContain(
-      `code={"<Button variant=\\"default\\">Click</Button>"}`,
-    );
+    expect(result!.code).toContain(`code={"<Button variant=\\"default\\">Click</Button>"}`);
     expect(result!.code).toContain("<PreviewBlock");
     expect(result!.code).toContain("/>");
     // Should NOT contain children
@@ -48,15 +46,9 @@ describe("previewPlugin", () => {
 
   it("transforms multiple ```tsx preview blocks", async () => {
     const id = "src/Multi.md";
-    const input = [
-      "```tsx preview",
-      "<A />",
-      "```",
-      "",
-      "```tsx preview",
-      "<B />",
-      "```",
-    ].join("\n");
+    const input = ["```tsx preview", "<A />", "```", "", "```tsx preview", "<B />", "```"].join(
+      "\n",
+    );
 
     const result = await callTransform(input, id);
     const blockId0 = simpleHash(`${id}:0`);
@@ -82,32 +74,17 @@ describe("previewPlugin", () => {
   });
 
   it("escapes backslashes and double quotes in code", async () => {
-    const input = [
-      "```tsx preview",
-      "const re = /\\d+/;",
-      'const s = "hello";',
-      "```",
-    ].join("\n");
+    const input = ["```tsx preview", "const re = /\\d+/;", 'const s = "hello";', "```"].join("\n");
 
     const result = await callTransform(input, "src/Escape.md");
-    expect(result!.code).toContain(
-      `code={"const re = /\\\\d+/;\\nconst s = \\"hello\\";"}`,
-    );
+    expect(result!.code).toContain(`code={"const re = /\\\\d+/;\\nconst s = \\"hello\\";"}`);
   });
 
   it("preserves multiline code as escaped newlines in code prop", async () => {
-    const input = [
-      "```tsx preview",
-      "<div>",
-      "  <span>hello</span>",
-      "</div>",
-      "```",
-    ].join("\n");
+    const input = ["```tsx preview", "<div>", "  <span>hello</span>", "</div>", "```"].join("\n");
 
     const result = await callTransform(input, "src/Multiline.md");
-    expect(result!.code).toContain(
-      `code={"<div>\\n  <span>hello</span>\\n</div>"}`,
-    );
+    expect(result!.code).toContain(`code={"<div>\\n  <span>hello</span>\\n</div>"}`);
   });
 
   it("registers blocks in the block registry", async () => {

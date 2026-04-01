@@ -49,10 +49,7 @@ function Sidebar({
             fontSize: 14,
             border: "none",
             cursor: "pointer",
-            backgroundColor:
-              selected === entry.name
-                ? "var(--ms-sidebar-active)"
-                : "transparent",
+            backgroundColor: selected === entry.name ? "var(--ms-sidebar-active)" : "transparent",
             fontWeight: selected === entry.name ? 600 : 400,
             color: "var(--ms-fg)",
             fontFamily: "inherit",
@@ -196,11 +193,7 @@ export function App() {
         >
           <Header />
           <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-            <Sidebar
-              entries={entries}
-              selected={selected}
-              onSelect={setSelected}
-            />
+            <Sidebar entries={entries} selected={selected} onSelect={setSelected} />
             {current ? (
               <PreviewContent entry={current} />
             ) : (

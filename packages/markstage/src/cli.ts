@@ -12,8 +12,7 @@ async function resolveRunOptions(cwd: string): Promise<PreviewerRunOptions> {
     cwd,
   });
   const cfg = config ?? {};
-  const resolveFiles = () =>
-    fg(cfg.glob ?? DEFAULT_GLOB, { cwd, absolute: true });
+  const resolveFiles = () => fg(cfg.glob ?? DEFAULT_GLOB, { cwd, absolute: true });
   return { cwd, config: cfg, resolveFiles };
 }
 

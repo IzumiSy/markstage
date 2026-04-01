@@ -14,9 +14,7 @@ function slugify(children: ReactNode): string {
 
 export const mdxComponents = {
   h1: ({ children }: { children?: ReactNode }) => (
-    <h1 style={{ fontSize: 28, fontWeight: 700, margin: "0 0 16px" }}>
-      {children}
-    </h1>
+    <h1 style={{ fontSize: 28, fontWeight: 700, margin: "0 0 16px" }}>{children}</h1>
   ),
   h2: ({ children }: { children?: ReactNode }) => {
     const id = slugify(children);
@@ -38,10 +36,7 @@ export const mdxComponents = {
   h3: ({ children }: { children?: ReactNode }) => {
     const id = slugify(children);
     return (
-      <h3
-        id={id}
-        style={{ fontSize: 16, fontWeight: 600, margin: "20px 0 8px" }}
-      >
+      <h3 id={id} style={{ fontSize: 16, fontWeight: 600, margin: "20px 0 8px" }}>
         {children}
       </h3>
     );
@@ -89,9 +84,7 @@ export const mdxComponents = {
     </th>
   ),
   td: ({ children }: { children?: ReactNode }) => (
-    <td style={{ padding: "8px 12px", verticalAlign: "top" as const }}>
-      {children}
-    </td>
+    <td style={{ padding: "8px 12px", verticalAlign: "top" as const }}>{children}</td>
   ),
   code: ({ children }: { children?: ReactNode }) => (
     <code
