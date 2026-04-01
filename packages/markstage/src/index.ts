@@ -1,4 +1,4 @@
-export { defineConfig, DEFAULT_GLOB, type PreviewerConfig, type PreviewerRepo } from "./config";
+export { defineConfig, DEFAULT_GLOB, type PreviewerConfig } from "./config";
 export { createPreviewerViteConfig } from "./vite-config";
 export {
   extractPreviewBlocks,

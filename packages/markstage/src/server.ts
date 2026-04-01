@@ -14,8 +14,7 @@ function buildViteConfig({ cwd, config, resolveFiles }: PreviewerRunOptions) {
     root: cwd,
     title: config.title,
     resolveFiles,
-    css: config.css,
-    repo: config.repo,
+    css: config.previewCss,
     vite: config.vite,
   });
 }

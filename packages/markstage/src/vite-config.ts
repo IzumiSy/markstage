@@ -26,7 +26,6 @@ export function createPreviewerViteConfig(options: {
   resolveFiles: () => Promise<string[]>;
   css?: string;
   title: string;
-  repo?: import("./config").PreviewerRepo;
   /** Vite configuration overrides */
   vite?: {
     plugins?: PluginOption[];
@@ -45,14 +44,6 @@ export function createPreviewerViteConfig(options: {
     publicDir: false,
     define: {
       __PREVIEWER_TITLE__: JSON.stringify(options.title),
-      __PREVIEWER_REPO__: JSON.stringify(
-        options.repo
-          ? {
-              url: options.repo.url.replace(/\/+$/, ""),
-              ref: options.repo.ref ?? "main",
-            }
-          : null,
-      ),
     },
     resolve: {
       alias: {

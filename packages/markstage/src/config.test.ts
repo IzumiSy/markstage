@@ -6,8 +6,7 @@ describe("defineConfig", () => {
     const config = {
       title: "My Components",
       glob: "src/**/*.preview.mdx",
-      css: "./src/styles.css",
-      repo: { url: "https://github.com/user/repo", ref: "main" },
+      previewCss: "./src/styles.css",
     };
     expect(defineConfig(config)).toBe(config);
   });

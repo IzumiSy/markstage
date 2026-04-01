@@ -24,4 +24,3 @@ declare module "virtual:markstage-preview-registry" {
 }
 
 declare const __PREVIEWER_TITLE__: string;
-declare const __PREVIEWER_REPO__: { url: string; ref: string } | null;
