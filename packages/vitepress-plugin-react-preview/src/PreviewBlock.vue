@@ -51,14 +51,17 @@ let themeObserver: MutationObserver | null = null;
 function syncThemeToIframe() {
   const iframe = iframeRef.value;
   if (iframe?.contentWindow) {
+    // Security: specify origin instead of "*" to restrict postMessage recipients
     iframe.contentWindow.postMessage(
       { type: "mrp-theme", theme: currentTheme.value },
-      "*"
+      window.location.origin
     );
   }
 }
 
 function onMessage(e: MessageEvent) {
+  // Security: validate postMessage origin to prevent cross-origin message spoofing
+  if (e.origin !== window.location.origin) return;
   if (
     e.data?.type === "mrp-resize" &&
     e.data?.blockId === props.blockId
@@ -112,6 +115,14 @@ onBeforeUnmount(() => {
     </template>
     <template v-else>
       <div class="mrp-preview-render">
+        <!--
+          Security note: no sandbox attribute is set on this iframe.
+          Preview blocks are authored by trusted developers (markdown authors),
+          and adding sandbox="allow-scripts" alone would break ES module loading
+          (CORS) and postMessage origin checks. Adding both allow-scripts and
+          allow-same-origin together provides no real security benefit for
+          same-origin iframes.
+        -->
         <iframe
           ref="iframeRef"
           :src="previewUrl"
