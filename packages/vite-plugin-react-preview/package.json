@@ -19,6 +19,7 @@
   "scripts": {
     "dev": "tsdown --watch",
     "build": "tsdown",
+    "prepublishOnly": "pnpm run build",
     "type-check": "tsc --incremental",
     "test": "vitest run"
   },
