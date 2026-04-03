@@ -1,5 +1,7 @@
 # @izumisy/vite-plugin-react-preview
 
+[![npm](https://img.shields.io/npm/v/@izumisy/vite-plugin-react-preview)](https://www.npmjs.com/package/@izumisy/vite-plugin-react-preview)
+
 Low-level Vite plugin and utilities for rendering React component previews. This package is the shared engine used by both `@izumisy/md-react-preview` (CLI) and `@izumisy/vitepress-plugin-react-preview` (VitePress integration).
 
 ## Features

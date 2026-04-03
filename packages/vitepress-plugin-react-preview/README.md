@@ -1,5 +1,7 @@
 # @izumisy/vitepress-plugin-react-preview
 
+[![npm](https://img.shields.io/npm/v/@izumisy/vitepress-plugin-react-preview)](https://www.npmjs.com/package/@izumisy/vitepress-plugin-react-preview)
+
 VitePress plugin for rendering live React component previews inside your VitePress documentation site.
 
 Transforms `` ```tsx preview `` fenced blocks in Markdown into interactive previews rendered via iframes, with full style isolation and dark mode support.
