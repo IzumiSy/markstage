@@ -1,6 +1,6 @@
 {
   "name": "@izumisy/md-react-preview",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "md-react-preview — component previewer powered by MDX",
   "bin": {
     "mrp": "./dist/cli.mjs"
