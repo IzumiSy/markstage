@@ -23,16 +23,25 @@
     "type-check": "tsc --incremental",
     "test": "vitest run"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IzumiSy/md-react-preview",
+    "directory": "packages/vite-plugin-react-preview"
+  },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "vite": "catalog:"
+  "author": "IzumiSy",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@types/node": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "vite": ">=6"
   }
 }

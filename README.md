@@ -8,11 +8,11 @@ A lightweight toolkit for live-previewing React components directly from Markdow
 
 ## Packages
 
-| Package                                                                               | Description                                                                                           |
-| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| [`@izumisy/md-react-preview`](packages/md-react-preview/)                             | CLI & programmatic API — run a standalone preview server with `mrp dev` / `mrp build`                 |
-| [`@izumisy/vite-plugin-react-preview`](packages/vite-plugin-react-preview/)           | Vite plugin & utilities — preview block parsing, iframe rendering, standalone preview page generation |
-| [`@izumisy/vitepress-plugin-react-preview`](packages/vitepress-plugin-react-preview/) | VitePress plugin — live React component previews inside a VitePress site                              |
+| Package                                                                               | Version                                                                                                                                                               | Description                                                                                           |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| [`@izumisy/md-react-preview`](packages/md-react-preview/)                             | [![npm](https://img.shields.io/npm/v/@izumisy/md-react-preview)](https://www.npmjs.com/package/@izumisy/md-react-preview)                                             | CLI & programmatic API — run a standalone preview server with `mrp dev` / `mrp build`                 |
+| [`@izumisy/vite-plugin-react-preview`](packages/vite-plugin-react-preview/)           | [![npm](https://img.shields.io/npm/v/@izumisy/vite-plugin-react-preview)](https://www.npmjs.com/package/@izumisy/vite-plugin-react-preview)                           | Vite plugin & utilities — preview block parsing, iframe rendering, standalone preview page generation |
+| [`@izumisy/vitepress-plugin-react-preview`](packages/vitepress-plugin-react-preview/) | [![npm](https://img.shields.io/npm/v/@izumisy/vitepress-plugin-react-preview)](https://www.npmjs.com/package/@izumisy/vitepress-plugin-react-preview)                 | VitePress plugin — live React component previews inside a VitePress site                              |
 
 ## Examples
 

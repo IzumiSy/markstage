@@ -156,10 +156,6 @@ importers:
         version: 4.1.2(@types/node@22.19.15)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))
 
   packages/vite-plugin-react-preview:
-    dependencies:
-      vite:
-        specifier: 'catalog:'
-        version: 6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3)
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
@@ -170,6 +166,9 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
+      vite:
+        specifier: 'catalog:'
+        version: 6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3)
       vitest:
         specifier: 'catalog:'
         version: 4.1.2(@types/node@22.19.15)(vite@6.4.1(@types/node@22.19.15)(jiti@2.6.1)(yaml@2.8.3))

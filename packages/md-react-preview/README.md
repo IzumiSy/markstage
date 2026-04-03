@@ -1,5 +1,7 @@
 # @izumisy/md-react-preview
 
+[![npm](https://img.shields.io/npm/v/@izumisy/md-react-preview)](https://www.npmjs.com/package/@izumisy/md-react-preview)
+
 CLI and programmatic API for md-react-preview — a zero-config component previewer for React projects.
 
 Drop Markdown files into `docs/` with `` ```tsx preview `` fenced blocks and get a Vite-powered dev server with live component previews and syntax-highlighted source code.
