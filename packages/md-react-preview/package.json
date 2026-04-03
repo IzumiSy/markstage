@@ -19,7 +19,7 @@
   "scripts": {
     "dev": "tsdown --watch",
     "build": "tsdown",
-    "prepublishOnly": "tsdown",
+    "prepublishOnly": "pnpm run build",
     "type-check": "tsc --incremental",
     "lint": "oxlint",
     "fmt": "oxfmt --write src app/src",
