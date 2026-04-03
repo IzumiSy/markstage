@@ -26,9 +26,17 @@
     "fmt:check": "oxfmt --check src app/src",
     "test": "vitest run"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IzumiSy/md-react-preview",
+    "directory": "packages/md-react-preview"
+  },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "IzumiSy",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@izumisy/vite-plugin-react-preview": "workspace:*",
     "@mdx-js/react": "^3.1.0",

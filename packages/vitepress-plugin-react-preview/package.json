@@ -21,6 +21,16 @@
     "type-check": "tsc --incremental",
     "test": "vitest run"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IzumiSy/md-react-preview",
+    "directory": "packages/vitepress-plugin-react-preview"
+  },
+  "author": "IzumiSy",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@izumisy/vite-plugin-react-preview": "workspace:*"
   },
