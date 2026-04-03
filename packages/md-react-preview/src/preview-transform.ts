@@ -33,7 +33,16 @@ export function extractPreviewBlocks(source: string): PreviewBlock[] {
 }
 
 export function escapeJsString(s: string): string {
-  return s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n");
+  return (
+    s
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, "\\n")
+      // Security: escape characters that could break out of JS string literals
+      .replace(/\r/g, "\\r")
+      .replace(/\u2028/g, "\\u2028")
+      .replace(/\u2029/g, "\\u2029")
+  );
 }
 
 /**

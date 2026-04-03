@@ -113,11 +113,17 @@ export function PreviewBlock({
   const initialColorScheme = useRef(colorScheme);
   useEffect(() => {
     if (colorScheme === initialColorScheme.current) return;
-    iframeRef.current?.contentWindow?.postMessage({ type: "mrp-theme", theme: colorScheme }, "*");
+    // Security: specify origin instead of "*" to restrict postMessage recipients
+    iframeRef.current?.contentWindow?.postMessage(
+      { type: "mrp-theme", theme: colorScheme },
+      window.location.origin,
+    );
   }, [colorScheme]);
 
   useEffect(() => {
     function onMessage(e: MessageEvent) {
+      // Security: validate postMessage origin to prevent cross-origin message spoofing
+      if (e.origin !== window.location.origin) return;
       if (e.data?.type === "mrp-resize" && e.data?.blockId === blockId) {
         setIframeHeight(e.data.height);
       }
@@ -198,6 +204,14 @@ export function PreviewBlock({
           >
             <ExternalLinkIcon />
           </a>
+          {/*
+            Security note: no sandbox attribute is set on this iframe.
+            Preview blocks are authored by trusted developers (markdown authors),
+            and adding sandbox="allow-scripts" alone would break ES module loading
+            (CORS) and postMessage origin checks. Adding both allow-scripts and
+            allow-same-origin together provides no real security benefit for
+            same-origin iframes.
+          */}
           <iframe
             ref={iframeRef}
             src={previewUrl}

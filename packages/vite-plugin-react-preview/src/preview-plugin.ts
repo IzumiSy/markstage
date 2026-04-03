@@ -125,7 +125,9 @@ function applyTheme(theme) {
 if (themeParam === "dark" || themeParam === "light") {
   applyTheme(themeParam);
 }
+// Security: validate postMessage origin to prevent cross-origin message spoofing
 window.addEventListener("message", function(e) {
+  if (e.origin !== location.origin) return;
   if (e.data && e.data.type === "mrp-theme" && (e.data.theme === "dark" || e.data.theme === "light")) {
     applyTheme(e.data.theme);
   }
@@ -146,9 +148,10 @@ registry[blockId]().then(function(mod) {
   createRoot(root).render(createElement(mod.default));
 
   new ResizeObserver(function() {
+    // Security: specify origin instead of "*" to restrict postMessage recipients
     window.parent.postMessage(
       { type: "mrp-resize", blockId: blockId, height: root.scrollHeight },
-      "*"
+      location.origin
     );
   }).observe(root);
 });
