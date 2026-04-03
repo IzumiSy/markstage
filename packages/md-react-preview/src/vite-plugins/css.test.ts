@@ -37,9 +37,9 @@ describe("previewerCssPlugin", () => {
   });
 
   it("passes bare package specifier as-is without resolving", () => {
-    const plugin = previewerCssPlugin("/project", "@tailor-platform/app-shell/styles");
+    const plugin = previewerCssPlugin("/project", "@scope/package/styles");
     const code = (plugin.load as (id: string) => string | undefined)("\0virtual:previewer-css.css");
-    expect(code).toBe('@import "@tailor-platform/app-shell/styles";');
+    expect(code).toBe('@import "@scope/package/styles";');
   });
 
   it("passes non-scoped package specifier as-is", () => {

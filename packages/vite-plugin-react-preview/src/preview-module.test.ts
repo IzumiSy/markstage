@@ -49,10 +49,10 @@ describe("generatePreviewModuleCode", () => {
     const code = generatePreviewModuleCode(
       "abc123",
       { code: "<div />", sourceFile: "/test.mdx" },
-      "@tailor-platform/app-shell/styles",
+      "@scope/package/styles",
     );
     expect(code).toContain(
-      'import __mrp_css from "@tailor-platform/app-shell/styles?inline"',
+      'import __mrp_css from "@scope/package/styles?inline"',
     );
     expect(code).toContain("export const css = __mrp_css");
   });
