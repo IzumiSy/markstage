@@ -74,7 +74,7 @@ Options can be set as `key="value"` pairs or boolean flags in the fence meta:
 
 ## Configuration
 
-Create a `previewer.config.ts` at your project root:
+Create a `mrp.config.ts` at your project root:
 
 ```ts
 import { defineConfig } from "@izumisy/md-react-preview";
@@ -104,7 +104,7 @@ import { startDev, runBuild, defineConfig, createPreviewerViteConfig } from "@iz
 
 | Export | Description |
 |--------|-------------|
-| `defineConfig(config)` | Type helper for `previewer.config.ts` |
+| `defineConfig(config)` | Type helper for `mrp.config.ts` |
 | `startDev(options)` | Start the Vite dev server |
 | `runBuild(options)` | Run the production build |
 | `runPreview(options)` | Preview the production build |

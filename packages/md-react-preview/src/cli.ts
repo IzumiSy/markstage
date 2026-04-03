@@ -8,7 +8,7 @@ import { startDev, runBuild, runPreview } from "./server";
 
 async function resolveRunOptions(cwd: string): Promise<PreviewerRunOptions> {
   const { config } = await loadConfig<PreviewerConfig>({
-    name: "previewer",
+    name: "mrp",
     cwd,
   });
   const cfg = config ?? {};
@@ -17,14 +17,14 @@ async function resolveRunOptions(cwd: string): Promise<PreviewerRunOptions> {
 }
 
 const dev = defineCommand({
-  meta: { name: "dev", description: "Start the previewer dev server" },
+  meta: { name: "dev", description: "Start the dev server" },
   async run() {
     await startDev(await resolveRunOptions(process.cwd()));
   },
 });
 
 const buildCmd = defineCommand({
-  meta: { name: "build", description: "Build the previewer for production" },
+  meta: { name: "build", description: "Build for production" },
   async run() {
     await runBuild(await resolveRunOptions(process.cwd()));
   },
@@ -41,7 +41,7 @@ const previewCmd = defineCommand({
 });
 
 const main = defineCommand({
-  meta: { name: "previewer", description: "Component previewer" },
+  meta: { name: "mrp", description: "md-react-preview CLI" },
   subCommands: { dev, build: buildCmd, preview: previewCmd },
 });
 
