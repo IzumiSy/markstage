@@ -16,6 +16,7 @@ function buildViteConfig({ cwd, config, resolveFiles }: PreviewerRunOptions) {
     resolveFiles,
     css: config.previewCss,
     vite: config.vite,
+    mdx: config.mdx,
   });
 }
 

@@ -54,6 +54,7 @@
     "oxlint": "^1.56.0",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "unified": "^11.0.5",
     "vitest": "catalog:"
   }
 }

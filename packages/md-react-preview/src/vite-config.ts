@@ -7,6 +7,7 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkMdxFrontmatter from "remark-mdx-frontmatter";
 import remarkGfm from "remark-gfm";
 import type { InlineConfig, Plugin, PluginOption } from "vite";
+import type { PluggableList } from "unified";
 import { previewPlugin } from "./vite-plugins/preview";
 import { previewerEntriesPlugin } from "./vite-plugins/entries";
 import { previewerCssPlugin } from "./vite-plugins/css";
@@ -29,6 +30,11 @@ export function createPreviewerViteConfig(options: {
   /** Vite configuration overrides */
   vite?: {
     plugins?: PluginOption[];
+  };
+  /** MDX processing options */
+  mdx?: {
+    remarkPlugins?: PluggableList;
+    rehypePlugins?: PluggableList;
   };
 }): InlineConfig {
   const preview = previewPlugin(options.resolveFiles, {
@@ -65,7 +71,9 @@ export function createPreviewerViteConfig(options: {
             remarkGfm,
             remarkFrontmatter,
             [remarkMdxFrontmatter, { name: "frontmatter" }],
+            ...(options.mdx?.remarkPlugins ?? []),
           ],
+          rehypePlugins: [...(options.mdx?.rehypePlugins ?? [])],
           providerImportSource: "@mdx-js/react",
           format: "mdx",
           mdxExtensions: [".mdx", ".md"],

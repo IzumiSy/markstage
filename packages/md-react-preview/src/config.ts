@@ -1,4 +1,5 @@
 import type { PluginOption } from "vite";
+import type { PluggableList } from "unified";
 
 export type PreviewerConfig = {
   title: string;
@@ -10,6 +11,13 @@ export type PreviewerConfig = {
   vite?: {
     /** Additional Vite plugins (e.g. @tailwindcss/vite for Tailwind support) */
     plugins?: PluginOption[];
+  };
+  /** MDX processing options */
+  mdx?: {
+    /** Additional remark plugins (appended after built-in plugins) */
+    remarkPlugins?: PluggableList;
+    /** Additional rehype plugins */
+    rehypePlugins?: PluggableList;
   };
 };
 
