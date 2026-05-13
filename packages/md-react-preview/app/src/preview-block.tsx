@@ -248,9 +248,7 @@ function StandalonePreview({
             borderBottom: "1px solid var(--ms-border)",
           }}
         >
-          <span style={{ fontSize: 13, color: "var(--ms-fg-muted)" }}>
-            Preview
-          </span>
+          <span style={{ fontSize: 13, color: "var(--ms-fg-muted)" }}>Preview</span>
           <button
             type="button"
             // @ts-expect-error -- popoverTarget is not yet in React's type definitions
@@ -304,9 +302,7 @@ export function PreviewBlock({
 }) {
   const DEFAULT_HEIGHT = 200;
   const [open, setOpen] = useState(true);
-  const [iframeHeight, setIframeHeight] = useState(
-    height ? Number(height) : DEFAULT_HEIGHT,
-  );
+  const [iframeHeight, setIframeHeight] = useState(height ? Number(height) : DEFAULT_HEIGHT);
   const { colorScheme } = useTheme();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const expandIframeRef = useRef<HTMLIFrameElement>(null);
@@ -355,11 +351,7 @@ export function PreviewBlock({
       }}
     >
       {standalone ? (
-        <StandalonePreview
-          blockId={blockId}
-          previewUrl={previewUrl}
-          colorScheme={colorScheme}
-        />
+        <StandalonePreview blockId={blockId} previewUrl={previewUrl} colorScheme={colorScheme} />
       ) : (
         <div style={{ position: "relative" }}>
           <button
@@ -438,9 +430,7 @@ export function PreviewBlock({
                 borderBottom: "1px solid var(--ms-border)",
               }}
             >
-              <span style={{ fontSize: 13, color: "var(--ms-fg-muted)" }}>
-                Preview
-              </span>
+              <span style={{ fontSize: 13, color: "var(--ms-fg-muted)" }}>Preview</span>
               <button
                 type="button"
                 // @ts-expect-error -- popoverTarget is not yet in React's type definitions
@@ -475,11 +465,7 @@ export function PreviewBlock({
           </div>
         </>
       )}
-      <CodeSection
-        code={code}
-        open={open}
-        onToggle={() => setOpen((v) => !v)}
-      />
+      <CodeSection code={code} open={open} onToggle={() => setOpen((v) => !v)} />
     </div>
   );
 }
