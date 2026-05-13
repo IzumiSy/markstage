@@ -1,6 +1,6 @@
 {
   "name": "@izumisy/vitepress-plugin-react-preview",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "VitePress plugin for rendering React component previews via iframe",
   "type": "module",
   "exports": {
