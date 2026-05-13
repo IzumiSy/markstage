@@ -7,7 +7,7 @@ title: Button
 ## Default
 
 ```tsx preview
-export default <button>Click me</button>
+export default <button>Click me</button>;
 ```
 
 ## Styled
@@ -18,6 +18,9 @@ export default (
     <button style={{ color: "red" }}>Red</button>
     <button style={{ color: "blue" }}>Blue</button>
   </>
-)
+);
 ```
+
+```
+
 ```
