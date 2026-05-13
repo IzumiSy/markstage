@@ -5,9 +5,9 @@ import {
 } from "./preview-module";
 
 describe("generatePreviewModuleCode", () => {
-  it("exports a default Preview component", () => {
+  it("passes through user code as-is", () => {
     const code = generatePreviewModuleCode("abc123", {
-      code: "<Button>Click</Button>",
+      code: 'import { Button } from "./Button"\nexport default function Preview() { return <Button>Click</Button> }',
       sourceFile: "/src/Button.preview.mdx",
     });
     expect(code).toContain("export default function Preview()");
@@ -16,7 +16,7 @@ describe("generatePreviewModuleCode", () => {
 
   it("does not include createRoot or ResizeObserver", () => {
     const code = generatePreviewModuleCode("abc123", {
-      code: "<Button>Click</Button>",
+      code: "export default function Preview() { return <Button>Click</Button> }",
       sourceFile: "/src/Button.preview.mdx",
     });
     expect(code).not.toContain("createRoot");
@@ -32,17 +32,13 @@ describe("generatePreviewModuleCode", () => {
     expect(code).toContain('export const css = ""');
   });
 
-  it("separates import statements from body", () => {
+  it("preserves user code structure including imports and export default", () => {
     const code = generatePreviewModuleCode("abc123", {
-      code: 'import { Button } from "./Button"\n<Button>Click</Button>',
+      code: 'import { Button } from "./Button"\nexport default function Preview() { return <Button>Click</Button> }',
       sourceFile: "/src/test.mdx",
     });
-    const lines = code.split("\n");
-    const buttonImportIdx = lines.findIndex((l) => l.includes("./Button"));
-    const previewIdx = lines.findIndex((l) =>
-      l.includes("export default function Preview"),
-    );
-    expect(buttonImportIdx).toBeLessThan(previewIdx);
+    expect(code).toContain('import { Button } from "./Button"');
+    expect(code).toContain("export default function Preview()");
   });
 
   it("imports CSS with ?inline and exports as css", () => {

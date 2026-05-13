@@ -145,7 +145,8 @@ registry[blockId]().then(function(mod) {
     style.textContent = mod.css;
     document.head.appendChild(style);
   }
-  createRoot(root).render(createElement(mod.default));
+  var content = typeof mod.default === "function" ? createElement(mod.default) : mod.default;
+  createRoot(root).render(content);
 
   new ResizeObserver(function() {
     // Security: specify origin instead of "*" to restrict postMessage recipients

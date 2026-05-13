@@ -134,7 +134,7 @@ describe("createPreviewHooks", () => {
     it("generates preview module code for a known blockId", () => {
       const registry = new Map<string, PreviewBlockEntry>();
       registry.set("abc12345", {
-        code: "<Button>Click</Button>",
+        code: 'import { Button } from "./Button"\nexport default function Preview() { return <Button>Click</Button> }',
         sourceFile: "/src/Button.md",
       });
       const { load } = setupHooks(registry, "@my-lib/styles");

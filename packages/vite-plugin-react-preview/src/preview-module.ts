@@ -45,24 +45,15 @@ export function generateStandaloneHtml(scriptSrc: string): string {
  * The module exports a React component as default and the CSS string as `css`.
  * The host component (e.g. PreviewBlock) is responsible for mounting the
  * component into an iframe container and injecting the CSS.
+ *
+ * The user's code must contain its own `export default` (e.g.
+ * `export default function Preview() { ... }`).
  */
 export function generatePreviewModuleCode(
   _blockId: string,
   entry: PreviewBlockEntry,
   cssImport?: string,
 ): string {
-  const lines = entry.code.split("\n");
-  const blockImports: string[] = [];
-  const bodyLines: string[] = [];
-  for (const line of lines) {
-    if (line.trimStart().startsWith("import ")) {
-      blockImports.push(line);
-    } else {
-      bodyLines.push(line);
-    }
-  }
-  const body = bodyLines.join("\n").trim();
-
   const cssLines: string[] = [];
   if (cssImport) {
     cssLines.push(
@@ -73,9 +64,5 @@ export function generatePreviewModuleCode(
     cssLines.push(`export const css = "";`);
   }
 
-  return [
-    ...cssLines,
-    ...blockImports,
-    `export default function Preview() { return <>${body}</>; }`,
-  ].join("\n");
+  return [...cssLines, entry.code].join("\n");
 }
