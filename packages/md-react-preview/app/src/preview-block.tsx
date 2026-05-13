@@ -148,7 +148,6 @@ function StandalonePreview({
       <style>{`#${popoverId}::backdrop { background: rgba(0, 0, 0, 0.5); }`}</style>
       <button
         type="button"
-        // @ts-expect-error -- popoverTarget is not yet in React's type definitions
         popoverTarget={popoverId}
         style={{
           display: "flex",
@@ -219,7 +218,6 @@ function StandalonePreview({
           </span>
         </span>
       </button>
-      {/* @ts-expect-error -- popover attribute is not yet in React's type definitions */}
       <div
         ref={popoverRef}
         id={popoverId}
@@ -248,10 +246,11 @@ function StandalonePreview({
             borderBottom: "1px solid var(--ms-border)",
           }}
         >
-          <span style={{ fontSize: 13, color: "var(--ms-fg-muted)" }}>Preview</span>
+          <span style={{ fontSize: 13, color: "var(--ms-fg-muted)" }}>
+            Preview
+          </span>
           <button
             type="button"
-            // @ts-expect-error -- popoverTarget is not yet in React's type definitions
             popoverTarget={popoverId}
             popoverTargetAction="hide"
             style={{
@@ -302,7 +301,9 @@ export function PreviewBlock({
 }) {
   const DEFAULT_HEIGHT = 200;
   const [open, setOpen] = useState(true);
-  const [iframeHeight, setIframeHeight] = useState(height ? Number(height) : DEFAULT_HEIGHT);
+  const [iframeHeight, setIframeHeight] = useState(
+    height ? Number(height) : DEFAULT_HEIGHT,
+  );
   const { colorScheme } = useTheme();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const expandIframeRef = useRef<HTMLIFrameElement>(null);
@@ -351,12 +352,15 @@ export function PreviewBlock({
       }}
     >
       {standalone ? (
-        <StandalonePreview blockId={blockId} previewUrl={previewUrl} colorScheme={colorScheme} />
+        <StandalonePreview
+          blockId={blockId}
+          previewUrl={previewUrl}
+          colorScheme={colorScheme}
+        />
       ) : (
         <div style={{ position: "relative" }}>
           <button
             type="button"
-            // @ts-expect-error -- popoverTarget is not yet in React's type definitions
             popoverTarget={expandPopoverId}
             title="Expand preview"
             style={{
@@ -403,7 +407,6 @@ export function PreviewBlock({
       {!standalone && (
         <>
           <style>{`#${expandPopoverId}::backdrop { background: rgba(0, 0, 0, 0.5); }`}</style>
-          {/* @ts-expect-error -- popover attribute is not yet in React's type definitions */}
           <div
             id={expandPopoverId}
             popover="auto"
@@ -430,10 +433,11 @@ export function PreviewBlock({
                 borderBottom: "1px solid var(--ms-border)",
               }}
             >
-              <span style={{ fontSize: 13, color: "var(--ms-fg-muted)" }}>Preview</span>
+              <span style={{ fontSize: 13, color: "var(--ms-fg-muted)" }}>
+                Preview
+              </span>
               <button
                 type="button"
-                // @ts-expect-error -- popoverTarget is not yet in React's type definitions
                 popoverTarget={expandPopoverId}
                 popoverTargetAction="hide"
                 style={{
@@ -465,7 +469,11 @@ export function PreviewBlock({
           </div>
         </>
       )}
-      <CodeSection code={code} open={open} onToggle={() => setOpen((v) => !v)} />
+      <CodeSection
+        code={code}
+        open={open}
+        onToggle={() => setOpen((v) => !v)}
+      />
     </div>
   );
 }
