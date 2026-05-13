@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, nextTick } from "vue";
 
 const props = defineProps<{
   code: string;
@@ -11,9 +11,18 @@ const props = defineProps<{
   standalone?: string;
 }>();
 
+const THUMBNAIL_VIEWPORT_WIDTH = 1280;
+const THUMBNAIL_VIEWPORT_HEIGHT = 720;
+const THUMBNAIL_SCALE = 0.2;
+
 const isStandalone = computed(() => props.standalone === "true");
+const popoverId = computed(() => `mrp-popover-${props.blockId}`);
+const expandPopoverId = computed(() => `mrp-expand-${props.blockId}`);
 const showCode = ref(true);
 const iframeRef = ref<HTMLIFrameElement | null>(null);
+const standaloneIframeRef = ref<HTMLIFrameElement | null>(null);
+const thumbnailIframeRef = ref<HTMLIFrameElement | null>(null);
+const expandIframeRef = ref<HTMLIFrameElement | null>(null);
 const iframeHeight = ref(props.height ? Number(props.height) : 150);
 
 const decodedCode = computed(() => {
@@ -49,13 +58,21 @@ const previewUrl = computed(() => {
 let themeObserver: MutationObserver | null = null;
 
 function syncThemeToIframe() {
-  const iframe = iframeRef.value;
-  if (iframe?.contentWindow) {
-    // Security: specify origin instead of "*" to restrict postMessage recipients
-    iframe.contentWindow.postMessage(
-      { type: "mrp-theme", theme: currentTheme.value },
-      window.location.origin
-    );
+  for (const iframe of [iframeRef.value, standaloneIframeRef.value, thumbnailIframeRef.value, expandIframeRef.value]) {
+    if (iframe?.contentWindow) {
+      // Security: specify origin instead of "*" to restrict postMessage recipients
+      iframe.contentWindow.postMessage(
+        { type: "mrp-theme", theme: currentTheme.value },
+        window.location.origin
+      );
+    }
+  }
+}
+
+function onPopoverToggle(e: Event) {
+  const toggleEvent = e as ToggleEvent;
+  if (toggleEvent.newState === "open") {
+    nextTick(() => syncThemeToIframe());
   }
 }
 
@@ -66,6 +83,8 @@ function onMessage(e: MessageEvent) {
     e.data?.type === "mrp-resize" &&
     e.data?.blockId === props.blockId
   ) {
+    // Ignore resize messages from the expand popover iframe
+    if (e.source === expandIframeRef.value?.contentWindow) return;
     iframeHeight.value = e.data.height;
   }
 }
@@ -96,22 +115,62 @@ onBeforeUnmount(() => {
 <template>
   <div class="mrp-preview vp-raw">
     <template v-if="isStandalone">
-      <a
-        :href="previewUrl"
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        type="button"
+        :popovertarget="popoverId"
         class="mrp-preview-standalone-link"
       >
-        <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5">
-          <path d="M7 3H3v10h10V9" />
-          <path d="M10 2h4v4" />
-          <path d="M14 2L7 9" />
-        </svg>
+        <div
+          class="mrp-preview-thumbnail"
+          :style="{
+            width: THUMBNAIL_VIEWPORT_WIDTH * THUMBNAIL_SCALE + 'px',
+            height: THUMBNAIL_VIEWPORT_HEIGHT * THUMBNAIL_SCALE + 'px',
+          }"
+        >
+          <iframe
+            ref="thumbnailIframeRef"
+            :src="previewUrl"
+            tabindex="-1"
+            aria-hidden="true"
+            class="mrp-preview-thumbnail-iframe"
+            :style="{
+              width: THUMBNAIL_VIEWPORT_WIDTH + 'px',
+              height: THUMBNAIL_VIEWPORT_HEIGHT + 'px',
+              transform: `scale(${THUMBNAIL_SCALE})`,
+            }"
+          />
+        </div>
         <span class="mrp-preview-standalone-text">
           <span class="mrp-preview-standalone-title">Open full-page preview</span>
           <span class="mrp-preview-standalone-desc">This component requires a full viewport to render correctly.</span>
         </span>
-      </a>
+      </button>
+      <div
+        :id="popoverId"
+        popover="auto"
+        class="mrp-preview-popover"
+        @toggle="onPopoverToggle"
+      >
+        <div class="mrp-preview-popover-header">
+          <span class="mrp-preview-popover-title">Preview</span>
+          <button
+            type="button"
+            :popovertarget="popoverId"
+            popovertargetaction="hide"
+            class="mrp-preview-popover-close"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4l8 8" />
+              <path d="M12 4l-8 8" />
+            </svg>
+          </button>
+        </div>
+        <iframe
+          ref="standaloneIframeRef"
+          :src="previewUrl"
+          class="mrp-preview-popover-iframe"
+        />
+      </div>
     </template>
     <template v-else>
       <div class="mrp-preview-render">
@@ -131,19 +190,45 @@ onBeforeUnmount(() => {
         />
       </div>
       <div class="mrp-preview-actions">
-        <a
-          :href="previewUrl"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          :popovertarget="expandPopoverId"
           class="mrp-preview-fullscreen-link"
         >
-          Open full preview
+          Expand preview
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M7 3H3v10h10V9" />
-            <path d="M10 2h4v4" />
-            <path d="M14 2L7 9" />
+            <path d="M3 10v3h3" />
+            <path d="M13 6V3h-3" />
+            <path d="M3 13l4-4" />
+            <path d="M13 3l-4 4" />
           </svg>
-        </a>
+        </button>
+      </div>
+      <div
+        :id="expandPopoverId"
+        popover="auto"
+        class="mrp-preview-popover"
+        @toggle="onPopoverToggle"
+      >
+        <div class="mrp-preview-popover-header">
+          <span class="mrp-preview-popover-title">Preview</span>
+          <button
+            type="button"
+            :popovertarget="expandPopoverId"
+            popovertargetaction="hide"
+            class="mrp-preview-popover-close"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4l8 8" />
+              <path d="M12 4l-8 8" />
+            </svg>
+          </button>
+        </div>
+        <iframe
+          ref="expandIframeRef"
+          :src="previewUrl"
+          class="mrp-preview-popover-iframe"
+        />
       </div>
     </template>
     <div class="mrp-preview-code">
@@ -233,6 +318,11 @@ onBeforeUnmount(() => {
   font-size: 12px;
   color: var(--vp-c-text-3);
   text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
 }
 
 .mrp-preview-fullscreen-link:hover {
@@ -259,13 +349,33 @@ onBeforeUnmount(() => {
   line-height: 1.6 !important;
 }
 
+.mrp-preview-thumbnail {
+  overflow: hidden;
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.mrp-preview-thumbnail-iframe {
+  display: block;
+  border: none;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
 .mrp-preview-standalone-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 20px 16px;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
   text-decoration: none;
   color: var(--vp-c-text-2);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
   transition: background-color 0.15s;
 }
 
@@ -277,6 +387,7 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  text-align: left;
 }
 
 .mrp-preview-standalone-title {
@@ -288,5 +399,60 @@ onBeforeUnmount(() => {
 .mrp-preview-standalone-desc {
   font-size: 12px;
   color: var(--vp-c-text-3);
+}
+
+.mrp-preview-popover {
+  position: fixed;
+  inset: 0;
+  width: 90vw;
+  height: 90vh;
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--vp-c-bg);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.mrp-preview-popover::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.mrp-preview-popover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+
+.mrp-preview-popover-title {
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+}
+
+.mrp-preview-popover-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--vp-c-divider);
+  background: none;
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+}
+
+.mrp-preview-popover-close:hover {
+  color: var(--vp-c-text-1);
+}
+
+.mrp-preview-popover-iframe {
+  display: block;
+  width: 100%;
+  height: calc(100% - 45px);
+  border: none;
 }
 </style>
